@@ -22,11 +22,15 @@ const App = () => {
   const Content = props => (
     <>
       {props.parts.map(coursePart => (
-        <p>
-          {coursePart.title} {coursePart.exercise}
-        </p>
+        <Part coursePart={coursePart} />
       ))}
     </>
+  );
+
+  const Part = props => (
+    <p>
+      {props.coursePart.title} {props.coursePart.exercise}
+    </p>
   );
 
   const accumulatedNumbersOfExercises = parts.map(
