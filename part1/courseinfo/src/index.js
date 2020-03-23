@@ -2,23 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const App = () => {
-  const course = 'Half Stack application development';
-  const Header = props => <h1>{props.course}</h1>;
-
-  const parts = [
-    {
-      title: 'Fundamentals of React',
-      numberOfExercises: 10
-    },
-    {
-      title: 'Using props to pass data',
-      numberOfExercises: 7
-    },
-    {
-      title: 'State of a component',
-      numberOfExercises: 14
-    }
-  ];
+  const Header = props => <h1>{props.course.name}</h1>;
   const Content = props => (
     <>
       {props.parts.map(coursePart => (
@@ -26,28 +10,48 @@ const App = () => {
       ))}
     </>
   );
-
   const Part = props => (
     <p>
-      {props.coursePart.title} {props.coursePart.exercise}
+      {props.coursePart.name} {props.coursePart.exercises}
     </p>
   );
 
-  const accumulatedNumbersOfExercises = parts.map(
-    coursePart => coursePart.numberOfExercises
-  );
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  };
 
-  const totalNumberOfExercises = accumulatedNumbersOfExercises.numberOfExercises.reduce(
-    (exercise1, exercise2) => exercise1 + exercise2,
-    0
-  );
-  const Total = props => <p>Number of exercises {props.total}</p>;
+  const Total = props => {
+    const accumulatedNumbersOfExercises = props.parts.map(
+      coursePart => coursePart.exercises
+    );
+
+    const totalNumberOfExercises = accumulatedNumbersOfExercises.reduce(
+      (exercise1, exercise2) => exercise1 + exercise2,
+      0
+    );
+
+    return <p>Number of exercises {totalNumberOfExercises}</p>;
+  };
 
   return (
     <div>
       <Header course={course} />
-      <Content parts={parts} />
-      <Total total={totalNumberOfExercises} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 };
