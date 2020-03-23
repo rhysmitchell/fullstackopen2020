@@ -7,6 +7,12 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const statsArr = [good, neutral, bad];
+  const total = statsArr.reduce((a, b) => a + b, 0);
+  const average =
+    [good, neutral, bad].reduce((a, b) => a + b, 0) / statsArr.length;
+  const percentageOfPositiveFeedback = (good * 100) / total || 0;
+
   return (
     <>
       <h3>Give Feedback</h3>
@@ -21,6 +27,12 @@ const App = () => {
       <span>Neutral: {neutral}</span>
       <br />
       <span>Bad: {bad}</span>
+      <br />
+      <span>Total: {total}</span>
+      <br />
+      <span>Average: {average}</span>
+      <br />
+      <span>Positive: {percentageOfPositiveFeedback} %</span>
     </>
   );
 };
