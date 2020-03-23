@@ -1,21 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const App = () => {
-  const Header = props => <h1>{props.course.name}</h1>;
-  const Content = props => (
-    <>
-      {props.parts.map(coursePart => (
-        <Part coursePart={coursePart} />
-      ))}
-    </>
-  );
-  const Part = props => (
-    <p>
-      {props.coursePart.name} {props.coursePart.exercises}
-    </p>
+const Header = props => <h1>{props.course.name}</h1>;
+
+const Content = props => (
+  <>
+    {props.parts.map(coursePart => (
+      <Part coursePart={coursePart} />
+    ))}
+  </>
+);
+
+const Part = props => (
+  <p>
+    {props.coursePart.name} {props.coursePart.exercises}
+  </p>
+);
+
+const Total = props => {
+  const accumulatedNumbersOfExercises = props.parts.map(
+    coursePart => coursePart.exercises
   );
 
+  const totalNumberOfExercises = accumulatedNumbersOfExercises.reduce(
+    (exercise1, exercise2) => exercise1 + exercise2,
+    0
+  );
+
+  return <p>Number of exercises {totalNumberOfExercises}</p>;
+};
+
+const App = () => {
   const course = {
     name: 'Half Stack application development',
     parts: [
@@ -32,19 +47,6 @@ const App = () => {
         exercises: 14
       }
     ]
-  };
-
-  const Total = props => {
-    const accumulatedNumbersOfExercises = props.parts.map(
-      coursePart => coursePart.exercises
-    );
-
-    const totalNumberOfExercises = accumulatedNumbersOfExercises.reduce(
-      (exercise1, exercise2) => exercise1 + exercise2,
-      0
-    );
-
-    return <p>Number of exercises {totalNumberOfExercises}</p>;
   };
 
   return (
