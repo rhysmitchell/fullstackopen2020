@@ -15,12 +15,16 @@ const Statistics = props => {
   return (
     <>
       <h3>Statistics</h3>
-      <Statistic text='Good' value={good} />
-      <Statistic text='Neutral' value={neutral} />
-      <Statistic text='Bad' value={bad} />
-      <Statistic text='Total' value={total} />
-      <Statistic text='Average' value={average} />
-      <Statistic text='Positive' value={percentageOfPositiveFeedback} />
+      <table>
+        <tbody>
+          <Statistic text='Good' value={good} />
+          <Statistic text='Neutral' value={neutral} />
+          <Statistic text='Bad' value={bad} />
+          <Statistic text='Total' value={total} />
+          <Statistic text='Average' value={average} />
+          <Statistic text='Positive' value={percentageOfPositiveFeedback} />
+        </tbody>
+      </table>
     </>
   );
 };
@@ -33,12 +37,10 @@ const Button = props => {
 const Statistic = props => {
   const { text, value } = props;
   return (
-    <>
-      <span>
-        {text}: {value}
-      </span>
-      <br />
-    </>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 
