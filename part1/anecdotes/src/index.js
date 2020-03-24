@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom';
 const App = props => {
   const [selected, setSelected] = useState(0);
   const getNextRandomAnecdote = () => {
-    const randomNumberInRange =
-      Math.floor(Math.random() * anecdotes.length) + 1;
+    const randomNumberInRange = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomNumberInRange);
   };
 
