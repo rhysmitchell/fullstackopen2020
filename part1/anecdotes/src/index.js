@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 const App = () => {
   const [selected, setSelected] = useState(0);
+  const [anecdoteWithMostVotes, setAnecdoteWithMostVotes] = useState({});
   const [anecdotes, setAnecdotes] = useState([
     { anecdote: 'If it hurts, do it more often', votes: 0 },
     {
@@ -37,16 +38,35 @@ const App = () => {
     newAnecdotesArray[selected].votes += 1;
 
     setAnecdotes(newAnecdotesArray);
+    updateAnecdoteWithMostVotes();
+  };
+
+  const updateAnecdoteWithMostVotes = () => {
+    const topVotes = Math.max(...anecdotes.map(anecdote => anecdote.votes), 0);
+    const anecdoteWithTopVotes = anecdotes.find(
+      anecdote => anecdote.votes === topVotes
+    );
+
+    setAnecdoteWithMostVotes(anecdoteWithTopVotes);
   };
 
   return (
     <>
+      <h3>Anecdote of the day</h3>
       {anecdotes[selected].anecdote}
       <br />
       has {anecdotes[selected].votes} votes
       <br />
       <button onClick={handleVote}>Vote</button>
       <button onClick={() => selectNextAnecdote()}>Next anecdote</button>
+      <br />
+      {anecdoteWithMostVotes.anecdote && (
+        <>
+          <h3>Anecdote with the most votes</h3>
+          {anecdoteWithMostVotes.anecdote} <br />
+          has {anecdoteWithMostVotes.votes} votes
+        </>
+      )}
     </>
   );
 };
