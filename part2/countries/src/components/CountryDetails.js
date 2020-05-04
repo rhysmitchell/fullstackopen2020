@@ -24,7 +24,7 @@ const SingleCountry = ({ country }) => {
       .then((response) => {
         setWeatherDetails(response.data.current);
       });
-  }, []);
+  }, [country.name]);
 
   return (
     <>
