@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import CountryDetails from './components/CountryDetails';
+import TooManyMatches from './components/TooManyMatches';
+import SearchResults from './components/SearchResults';
+import CountrySearch from './components/CountrySearch';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
+  const [countryToShow, setCountryToShow] = useState(null);
 
   useEffect(() => {
     axios
@@ -18,56 +23,26 @@ const App = () => {
         country.name.toLowerCase().includes(countyName)
       )
     );
+    setCountryToShow(null);
   };
 
   return (
     <div>
-      <span>Find countries </span>
-      <input
-        type='text'
-        onChange={(e) => filterCountries(e.currentTarget.value.toLowerCase())}
-      />
+      <CountrySearch filterCountries={filterCountries} />
 
       <br />
 
-      {filteredCountries.length === 1 && (
-        <>
-          <h2>{filteredCountries[0].name}</h2>
-          <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-            <li key={filteredCountries[0].capital}>
-              <span>Capital: {filteredCountries[0].capital}</span>
-            </li>
-            <li key={filteredCountries[0].population}>
-              <span>Population: {filteredCountries[0].population}</span>
-            </li>
-          </ul>
+      <SearchResults
+        countries={filteredCountries}
+        countryToShow={countryToShow}
+        setCountryToShow={setCountryToShow}
+      />
 
-          <h2>Languages</h2>
-          <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-            {filteredCountries[0].languages.map((language) => (
-              <li key={language.name}>{language.name}</li>
-            ))}
-          </ul>
-
-          <img
-            src={filteredCountries[0].flag}
-            alt={filteredCountries[0].name}
-            style={{ maxWidth: '200px', maxHeight: 'auto' }}
-          />
-        </>
-      )}
-
-      {filteredCountries.length > 1 && filteredCountries.length < 10 && (
-        <ul>
-          {filteredCountries.map((country) => (
-            <li key={country.name}>{country.name}</li>
-          ))}
-        </ul>
-      )}
-
-      {filteredCountries.length > 10 && (
-        <span>Too many matches, specify another filter</span>
-      )}
+      <CountryDetails
+        countries={filteredCountries}
+        countryToShow={countryToShow}
+      />
+      <TooManyMatches countries={filteredCountries} />
     </div>
   );
 };
