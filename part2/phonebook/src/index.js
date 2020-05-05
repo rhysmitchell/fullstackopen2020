@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import phonebookService from './services/phonebookService';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPersons(response.data));
-  }, []);
+  useEffect(
+    () =>
+      phonebookService.getAll().then((response) => setPersons(response.data)),
+    []
+  );
 
   const [newPerson, setNewPerson] = useState({
     name: '',
@@ -30,7 +30,9 @@ const App = () => {
       return;
     }
 
-    setPersons((persons) => [...persons, newPerson]);
+    phonebookService
+      .create(newPerson)
+      .then((response) => setPersons((persons) => [...persons, response.data]));
   };
 
   return (
