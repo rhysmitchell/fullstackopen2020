@@ -8,11 +8,9 @@ import phonebookService from './services/phonebookService';
 const App = () => {
   const [persons, setPersons] = useState([]);
 
-  useEffect(
-    () =>
-      phonebookService.getAll().then((response) => setPersons(response.data)),
-    []
-  );
+  useEffect(() => {
+    phonebookService.getAll().then((response) => setPersons(response.data));
+  }, [persons]);
 
   const [newPerson, setNewPerson] = useState({
     name: '',
@@ -35,6 +33,15 @@ const App = () => {
       .then((response) => setPersons((persons) => [...persons, response.data]));
   };
 
+  const deletePersonClick = (person) => {
+    const confirmDeletion = window.confirm(
+      `Are you sure you want to delete ${person.name}?`
+    );
+    if (confirmDeletion) {
+      phonebookService.remove(person.id).then((people) => setPersons(people));
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -48,7 +55,11 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} searchQuery={searchQuery} />
+      <Persons
+        persons={persons}
+        searchQuery={searchQuery}
+        deletePersonClick={deletePersonClick}
+      />
     </div>
   );
 };
