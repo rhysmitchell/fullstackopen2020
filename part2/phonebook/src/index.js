@@ -10,7 +10,7 @@ const App = () => {
 
   useEffect(() => {
     phonebookService.getAll().then((response) => setPersons(response.data));
-  }, [persons]);
+  }, []);
 
   const [newPerson, setNewPerson] = useState({
     name: '',
@@ -24,21 +24,36 @@ const App = () => {
 
     const names = persons.map((person) => person.name.toLowerCase());
     if (names.includes(newPerson.name.toLowerCase())) {
-      alert(`${newPerson.name} is already added to the phonebook.`);
-      return;
-    }
+      const confirmUpdate = window.confirm(
+        `${newPerson.name} is already added to the phonebook, replace the old number with the new one?`
+      );
 
-    phonebookService
-      .create(newPerson)
-      .then((response) => setPersons((persons) => [...persons, response.data]));
+      if (confirmUpdate) {
+        const personWithSameName = persons.find(
+          (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+        );
+        phonebookService
+          .update(personWithSameName.id, newPerson)
+          .then((response) => setPersons(response.data));
+      }
+    } else {
+      phonebookService
+        .create(newPerson)
+        .then((response) =>
+          setPersons((persons) => [...persons, response.data])
+        );
+    }
   };
 
   const deletePersonClick = (person) => {
     const confirmDeletion = window.confirm(
       `Are you sure you want to delete ${person.name}?`
     );
+
     if (confirmDeletion) {
-      phonebookService.remove(person.id).then((people) => setPersons(people));
+      phonebookService
+        .remove(person.id)
+        .then((response) => setPersons(response.data));
     }
   };
 
