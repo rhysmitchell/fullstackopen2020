@@ -4,9 +4,14 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import phonebookService from './services/phonebookService';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
+  const [message, setMessage] = useState({
+    type: null,
+    message: null,
+  });
 
   useEffect(() => {
     phonebookService.getAll().then((response) => setPersons(response.data));
@@ -34,14 +39,36 @@ const App = () => {
         );
         phonebookService
           .update(personWithSameName.id, newPerson)
-          .then((response) => setPersons(response.data));
+          .then((response) => {
+            setPersons(response.data);
+            setMessage({
+              type: 'success',
+              message: `${newPerson.name} was updated.`,
+            });
+
+            setTimeout(() => {
+              setMessage({
+                type: null,
+                message: null,
+              });
+            }, 5000);
+          });
       }
     } else {
-      phonebookService
-        .create(newPerson)
-        .then((response) =>
-          setPersons((persons) => [...persons, response.data])
-        );
+      phonebookService.create(newPerson).then((response) => {
+        setPersons((persons) => [...persons, response.data]);
+        setMessage({
+          type: 'success',
+          message: `${newPerson.name} was added.`,
+        });
+
+        setTimeout(() => {
+          setMessage({
+            type: null,
+            message: null,
+          });
+        }, 5000);
+      });
     }
   };
 
@@ -51,15 +78,27 @@ const App = () => {
     );
 
     if (confirmDeletion) {
-      phonebookService
-        .remove(person.id)
-        .then((response) => setPersons(response.data));
+      phonebookService.remove(person.id).then((response) => {
+        setPersons(response.data);
+        setMessage({
+          type: 'success',
+          message: `${person.name} was deleted.`,
+        });
+
+        setTimeout(() => {
+          setMessage({
+            type: null,
+            message: null,
+          });
+        }, 5000);
+      });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification schema={message} />
       <Filter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <h2>Add a new contact</h2>
