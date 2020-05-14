@@ -24,6 +24,22 @@ const App = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const flashMessage = (props) => {
+    const { type, message, resetInterval } = props;
+
+    setMessage({
+      type: type,
+      message: message,
+    });
+
+    setTimeout(() => {
+      setMessage({
+        type: null,
+        message: null,
+      });
+    }, resetInterval);
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
 
@@ -41,33 +57,29 @@ const App = () => {
           .update(personWithSameName.id, newPerson)
           .then((response) => {
             setPersons(response.data);
-            setMessage({
+            flashMessage({
               type: 'success',
               message: `${newPerson.name} was updated.`,
+              resetInterval: 5000,
             });
-
-            setTimeout(() => {
-              setMessage({
-                type: null,
-                message: null,
-              });
-            }, 5000);
+          })
+          .catch((error) => {
+            flashMessage({
+              type: 'error',
+              message: `Information of ${personWithSameName.name} has already been removed from the server.`,
+              resetInterval: 5000,
+            });
           });
       }
     } else {
       phonebookService.create(newPerson).then((response) => {
         setPersons((persons) => [...persons, response.data]);
-        setMessage({
+
+        flashMessage({
           type: 'success',
           message: `${newPerson.name} was added.`,
+          resetInterval: 5000,
         });
-
-        setTimeout(() => {
-          setMessage({
-            type: null,
-            message: null,
-          });
-        }, 5000);
       });
     }
   };
@@ -83,14 +95,8 @@ const App = () => {
         setMessage({
           type: 'success',
           message: `${person.name} was deleted.`,
+          resetInterval: 5000,
         });
-
-        setTimeout(() => {
-          setMessage({
-            type: null,
-            message: null,
-          });
-        }, 5000);
       });
     }
   };
