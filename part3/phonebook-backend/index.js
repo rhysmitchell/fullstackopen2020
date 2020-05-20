@@ -28,6 +28,15 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
 });
 
+app.get('/info', (req, res) => {
+  res.send(
+    `<div>
+      <p>Phonebook has info for ${phoneNumbers.length} people</p>
+      <p>${new Date()}</p>
+    </div>`
+  );
+});
+
 app.get('/api/phonebook', (req, res) => {
   res.json(phoneNumbers);
 });
