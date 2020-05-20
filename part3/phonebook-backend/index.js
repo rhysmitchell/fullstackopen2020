@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 let phoneNumbers = [
   {
@@ -39,6 +40,16 @@ app.get('/info', (req, res) => {
 
 app.get('/api/phonebook', (req, res) => {
   res.json(phoneNumbers);
+});
+
+app.post('/api/phonebook', (req, res) => {
+  const bigNumber = 1000;
+  const randomId = Math.floor(Math.random() * bigNumber + 1);
+
+  const newPhoneNumber = { ...req.body, id: randomId };
+  phoneNumbers = phoneNumbers.concat(newPhoneNumber);
+
+  res.status(200).end();
 });
 
 app.get('/api/phonebook/:id', (req, res) => {
