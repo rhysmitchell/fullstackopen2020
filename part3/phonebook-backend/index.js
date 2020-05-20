@@ -41,6 +41,17 @@ app.get('/api/phonebook', (req, res) => {
   res.json(phoneNumbers);
 });
 
+app.get('/api/phonebook/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const phoneNumber = phoneNumbers.find((phoneNumber) => phoneNumber.id === id);
+
+  if (!phoneNumber) {
+    res.send(`<p>Phonebook entry with id: ${id} does not exist<p/>`);
+  }
+
+  res.json(phoneNumber);
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
