@@ -7,6 +7,9 @@ const morgan = require('morgan');
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :data')
 );
+morgan.token('data', function (req) {
+  return JSON.stringify(req.body);
+});
 
 let phoneNumbers = [
   {
