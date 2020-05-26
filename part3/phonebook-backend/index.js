@@ -43,6 +43,26 @@ app.get('/api/phonebook', (req, res) => {
 });
 
 app.post('/api/phonebook', (req, res) => {
+  // Short-circuit if required params aren't provided
+  if (!req.body.name || !req.body.number) {
+    res.status(400).json({
+      error: `Name or Number parameter wasn't provided`,
+    });
+    return;
+  }
+
+  // Short-circuit if name already exists in local colleciton
+  const nameExistsInCollection =
+    phoneNumbers.filter((phoneNumber) => phoneNumber.name === req.body.name)
+      .length > 0;
+
+  if (nameExistsInCollection) {
+    res.status(400).json({
+      error: `Name must be unique`,
+    });
+    return;
+  }
+
   const bigNumber = 1000;
   const randomId = Math.floor(Math.random() * bigNumber + 1);
 
@@ -58,6 +78,7 @@ app.get('/api/phonebook/:id', (req, res) => {
 
   if (!phoneNumber) {
     res.send(`<p>Phonebook entry with id: ${id} does not exist<p/>`);
+    return;
   }
 
   res.json(phoneNumber);
