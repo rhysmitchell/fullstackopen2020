@@ -1,12 +1,11 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/phonebook';
+const baseUrl = 'http://localhost:3001/api/phonebook';
 
-const getAll = () => {
-  return axios.get(baseUrl);
-};
+const getAll = () => axios.get(baseUrl);
 
 const create = (newObject) => {
-  return axios.post(baseUrl, newObject);
+  const request = axios.post(baseUrl, newObject);
+  return request.then(() => getAll().then((people) => people));
 };
 
 const update = (id, newObject) => {

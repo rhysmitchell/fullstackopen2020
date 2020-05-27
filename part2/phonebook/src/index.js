@@ -73,7 +73,7 @@ const App = () => {
       }
     } else {
       phonebookService.create(newPerson).then((response) => {
-        setPersons((persons) => [...persons, response.data]);
+        setPersons(response.data);
 
         flashMessage({
           type: 'success',
