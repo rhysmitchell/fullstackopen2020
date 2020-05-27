@@ -3,8 +3,8 @@ import React from 'react';
 const PhonebookList = (props) => {
   const { persons, searchQuery, deletePersonClick } = props;
 
-  if (!persons.length) {
-    return <></>;
+  if (!persons) {
+    return null;
   }
 
   return (
