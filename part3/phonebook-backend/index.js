@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const cors = require('cors');
+app.use(cors());
+
 const morgan = require('morgan');
 
 app.use(
@@ -90,6 +93,17 @@ app.get('/api/phonebook/:id', (req, res) => {
   res.json(phoneNumber);
 });
 
+app.put('/api/phonebook/:id', (req, res) => {
+  const idToUpdate = Number(req.params.id);
+  const updatedObject = { ...req.body, id: idToUpdate };
+
+  phoneNumbers = phoneNumbers.map((phoneNumber) =>
+    phoneNumber.id !== idToUpdate ? phoneNumber : updatedObject
+  );
+
+  res.json(phoneNumbers);
+});
+
 app.delete('/api/phonebook/:id', (req, res) => {
   const id = Number(req.params.id);
   phoneNumbers = phoneNumbers.filter((phoneNumber) => phoneNumber.id !== id);
@@ -98,6 +112,4 @@ app.delete('/api/phonebook/:id', (req, res) => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
