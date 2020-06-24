@@ -16,19 +16,17 @@ const params = {
 const url = `mongodb+srv://fullstack:${params.password}@phonebookcluster.zdt0l.mongodb.net/phonebook-app?retryWrites=true&w=majority`;
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const phoneNumberSchema = new mongoose.Schema({
+const contactSchema = new mongoose.Schema({
   name: String,
   number: String,
   id: Number,
 });
 
-const PhoneNumber = mongoose.model('PhoneNumber', phoneNumberSchema);
+const Contact = mongoose.model('Contact', contactSchema);
 
 if (!params.name && !params.number) {
-  PhoneNumber.find({}).then((phoneNumbers) => {
-    phoneNumbers.map((phoneNumber) =>
-      console.log(`${phoneNumber.name} ${phoneNumber.number}`)
-    );
+  Contact.find({}).then((contacts) => {
+    contacts.map((contact) => console.log(`${contact.name} ${contact.number}`));
 
     mongoose.connection.close();
   });
@@ -37,13 +35,13 @@ if (!params.name && !params.number) {
   return;
 }
 
-const phoneNumber = new PhoneNumber({
+const contact = new Contact({
   name: process.argv[3],
   number: process.argv[4],
   id: 99999,
 });
 
-phoneNumber.save().then((result) => {
+contact.save().then((result) => {
   console.log(
     `Added ${result.name}'s phone number (${result.number}) to the phonebook.`
   );
