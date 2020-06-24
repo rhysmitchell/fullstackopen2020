@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import Filter from './components/Filter';
-import PersonForm from './components/PersonForm';
-import Persons from './components/Persons';
+import ContactForm from './components/ContactForm';
+import Contacts from './components/Contacts';
 import phonebookService from './services/phonebookService';
 import Notification from './components/Notification';
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [message, setMessage] = useState({
     type: null,
     message: null,
   });
 
   useEffect(() => {
-    phonebookService.getAll().then((response) => setPersons(response.data));
+    phonebookService.getAll().then((response) => setContacts(response.data));
   }, []);
 
-  const [newPerson, setNewPerson] = useState({
+  const [newContact, setNewContact] = useState({
     name: '',
     number: '',
   });
@@ -40,61 +40,62 @@ const App = () => {
     }, resetInterval);
   };
 
-  const addPerson = (event) => {
+  const addContact = (event) => {
     event.preventDefault();
 
-    const names = persons.map((person) => person.name.toLowerCase());
-    if (names.includes(newPerson.name.toLowerCase())) {
+    const names = contacts.map((contact) => contact.name.toLowerCase());
+    if (names.includes(newContact.name.toLowerCase())) {
       const confirmUpdate = window.confirm(
-        `${newPerson.name} is already added to the phonebook, replace the old number with the new one?`
+        `${newContact.name} is already added to the phonebook, replace the old number with the new one?`
       );
 
       if (confirmUpdate) {
-        const personWithSameName = persons.find(
-          (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+        const contactWithSameName = contacts.find(
+          (contact) =>
+            contact.name.toLowerCase() === newContact.name.toLowerCase()
         );
         phonebookService
-          .update(personWithSameName.id, newPerson)
+          .update(contactWithSameName.id, newContact)
           .then((response) => {
-            setPersons(response.data);
+            setContacts(response.data);
             flashMessage({
               type: 'success',
-              message: `${newPerson.name} was updated.`,
+              message: `${newContact.name} was updated.`,
               resetInterval: 5000,
             });
           })
           .catch((error) => {
             flashMessage({
               type: 'error',
-              message: `Information of ${personWithSameName.name} has already been removed from the server.`,
+              message: `Information of ${contactWithSameName.name} has already been removed from the server.`,
               resetInterval: 5000,
             });
           });
       }
     } else {
-      phonebookService.create(newPerson).then((response) => {
-        setPersons(response.data);
+      phonebookService.create(newContact).then((response) => {
+        setContacts(response.data);
 
         flashMessage({
           type: 'success',
-          message: `${newPerson.name} was added.`,
+          message: `${newContact.name} was added.`,
           resetInterval: 5000,
         });
       });
     }
   };
 
-  const deletePersonClick = (person) => {
+  const deleteContactClick = (contact) => {
     const confirmDeletion = window.confirm(
-      `Are you sure you want to delete ${person.name}?`
+      `Are you sure you want to delete ${contact.name}?`
     );
 
     if (confirmDeletion) {
-      phonebookService.remove(person.id).then((response) => {
-        setPersons(response.data);
+      phonebookService.remove(contact.id).then((response) => {
+        setContacts(response.data);
         setMessage({
           type: 'success',
-          message: `${person.name} was deleted.`,
+          message: `${contact.name} was deleted.`,
           resetInterval: 5000,
         });
       });
@@ -108,17 +109,17 @@ const App = () => {
       <Filter searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <h2>Add a new contact</h2>
-      <PersonForm
-        addPerson={addPerson}
-        setNewPerson={setNewPerson}
-        newPerson={newPerson}
+      <ContactForm
+        addContact={addContact}
+        setNewContact={setNewContact}
+        newContact={newContact}
       />
 
       <h2>Numbers</h2>
-      <Persons
-        persons={persons}
+      <Contacts
+        contacts={contacts}
         searchQuery={searchQuery}
-        deletePersonClick={deletePersonClick}
+        deleteContactClick={deleteContactClick}
       />
     </div>
   );

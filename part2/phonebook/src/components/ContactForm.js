@@ -1,17 +1,17 @@
 import React from 'react';
 
-const PersonForm = ({ addPerson, setNewPerson, newPerson }) => (
-  <form onSubmit={addPerson}>
+const PersonForm = ({ addContact, setNewContact, newContact }) => (
+  <form onSubmit={addContact}>
     <div>
       <label>Name: </label>
       <input
         onChange={(event) =>
-          setNewPerson({
-            ...newPerson,
+          setNewContact({
+            ...newContact,
             name: event.target.value,
           })
         }
-        value={newPerson.name}
+        value={newContact.name}
       />
 
       <br />
@@ -19,12 +19,12 @@ const PersonForm = ({ addPerson, setNewPerson, newPerson }) => (
       <label>Number: </label>
       <input
         onChange={(event) =>
-          setNewPerson({
-            ...newPerson,
+          setNewContact({
+            ...newContact,
             number: event.target.value,
           })
         }
-        value={newPerson.number}
+        value={newContact.number}
       />
     </div>
     <div>
