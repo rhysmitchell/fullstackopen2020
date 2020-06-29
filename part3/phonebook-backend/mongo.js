@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Contact = require('./models/contact');
 
 if (process.argv.length < 3) {
   console.log(
@@ -12,17 +13,6 @@ const params = {
   name: process.argv[3],
   number: process.argv[4],
 };
-
-const url = `mongodb+srv://fullstack:${params.password}@phonebookcluster.zdt0l.mongodb.net/phonebook-app?retryWrites=true&w=majority`;
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const contactSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-  id: Number,
-});
-
-const Contact = mongoose.model('Contact', contactSchema);
 
 if (!params.name && !params.number) {
   Contact.find({}).then((contacts) => {

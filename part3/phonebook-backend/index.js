@@ -1,5 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
+const Contact = require('./models/contact');
 app.use(express.json());
 app.use(express.static('build'));
 
@@ -15,7 +17,7 @@ morgan.token('data', function (req) {
   return JSON.stringify(req.body);
 });
 
-let phoneNumbers = [
+let contacts = [
   {
     name: 'Arto Hellas',
     number: '040-123456',
@@ -45,15 +47,18 @@ app.get('/', (req, res) => {
 app.get('/info', (req, res) => {
   res.send(
     `<div>
-      <p>Phonebook has info for ${phoneNumbers.length} people</p>
+      <p>Phonebook has info for ${contacts.length} people</p>
       <p>${new Date()}</p>
     </div>`
   );
 });
 
-app.get('/api/phonebook', (req, res) => {
-  res.json(phoneNumbers);
-});
+app.get('/api/phonebook', (req, res) =>
+  Contacts.find({}).then((contacts) => {
+    console.log(contacts);
+    res.json(contacts);
+  })
+);
 
 app.post('/api/phonebook', (req, res) => {
   // Short-circuit if required params aren't provided
@@ -65,7 +70,7 @@ app.post('/api/phonebook', (req, res) => {
 
   // Short-circuit if name already exists in local colleciton
   const nameExistsInCollection =
-    phoneNumbers.filter((phoneNumber) => phoneNumber.name === req.body.name)
+    contacts.filter((phoneNumber) => phoneNumber.name === req.body.name)
       .length > 0;
 
   if (nameExistsInCollection) {
@@ -78,14 +83,14 @@ app.post('/api/phonebook', (req, res) => {
   const randomId = Math.floor(Math.random() * bigNumber + 1);
 
   const newPhoneNumber = { ...req.body, id: randomId };
-  phoneNumbers = phoneNumbers.concat(newPhoneNumber);
+  contacts = contacts.concat(newPhoneNumber);
 
   res.status(200).end();
 });
 
 app.get('/api/phonebook/:id', (req, res) => {
   const id = Number(req.params.id);
-  const phoneNumber = phoneNumbers.find((phoneNumber) => phoneNumber.id === id);
+  const phoneNumber = contacts.find((phoneNumber) => phoneNumber.id === id);
 
   if (!phoneNumber) {
     return res.send(`<p>Phonebook entry with id: ${id} does not exist<p/>`);
@@ -98,19 +103,16 @@ app.put('/api/phonebook/:id', (req, res) => {
   const idToUpdate = Number(req.params.id);
   const updatedObject = { ...req.body, id: idToUpdate };
 
-  phoneNumbers = phoneNumbers.map((phoneNumber) =>
+  contacts = contacts.map((phoneNumber) =>
     phoneNumber.id !== idToUpdate ? phoneNumber : updatedObject
   );
 
-  res.json(phoneNumbers);
+  res.json(contacts);
 });
 
 app.delete('/api/phonebook/:id', (req, res) => {
   const id = Number(req.params.id);
-  phoneNumbers = phoneNumbers.filter((phoneNumber) => phoneNumber.id !== id);
+  contacts = contacts.filter((phoneNumber) => phoneNumber.id !== id);
 
   res.status(204).end();
 });
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
