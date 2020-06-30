@@ -17,28 +17,7 @@ morgan.token('data', function (req) {
   return JSON.stringify(req.body);
 });
 
-let contacts = [
-  {
-    name: 'Arto Hellas',
-    number: '040-123456',
-    id: 1,
-  },
-  {
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-    id: 2,
-  },
-  {
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-    id: 3,
-  },
-  {
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-    id: 4,
-  },
-];
+let contacts = [];
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
@@ -54,10 +33,7 @@ app.get('/info', (req, res) => {
 });
 
 app.get('/api/phonebook', (req, res) =>
-  Contacts.find({}).then((contacts) => {
-    console.log(contacts);
-    res.json(contacts);
-  })
+  Contact.find({}).then((contacts) => res.json(contacts))
 );
 
 app.post('/api/phonebook', (req, res) => {
@@ -70,8 +46,7 @@ app.post('/api/phonebook', (req, res) => {
 
   // Short-circuit if name already exists in local colleciton
   const nameExistsInCollection =
-    contacts.filter((phoneNumber) => phoneNumber.name === req.body.name)
-      .length > 0;
+    contacts.filter((contact) => contact.name === req.body.name).length > 0;
 
   if (nameExistsInCollection) {
     return res.status(400).json({
@@ -82,29 +57,29 @@ app.post('/api/phonebook', (req, res) => {
   const bigNumber = 1000;
   const randomId = Math.floor(Math.random() * bigNumber + 1);
 
-  const newPhoneNumber = { ...req.body, id: randomId };
-  contacts = contacts.concat(newPhoneNumber);
+  const newContact = { ...req.body, id: randomId };
+  contacts = contacts.concat(newContact);
 
   res.status(200).end();
 });
 
 app.get('/api/phonebook/:id', (req, res) => {
   const id = Number(req.params.id);
-  const phoneNumber = contacts.find((phoneNumber) => phoneNumber.id === id);
+  const contact = contacts.find((contact) => contact.id === id);
 
-  if (!phoneNumber) {
+  if (!contact) {
     return res.send(`<p>Phonebook entry with id: ${id} does not exist<p/>`);
   }
 
-  res.json(phoneNumber);
+  res.json(contact);
 });
 
 app.put('/api/phonebook/:id', (req, res) => {
   const idToUpdate = Number(req.params.id);
   const updatedObject = { ...req.body, id: idToUpdate };
 
-  contacts = contacts.map((phoneNumber) =>
-    phoneNumber.id !== idToUpdate ? phoneNumber : updatedObject
+  contacts = contacts.map((contact) =>
+    contact.id !== idToUpdate ? contact : updatedObject
   );
 
   res.json(contacts);
@@ -112,7 +87,10 @@ app.put('/api/phonebook/:id', (req, res) => {
 
 app.delete('/api/phonebook/:id', (req, res) => {
   const id = Number(req.params.id);
-  contacts = contacts.filter((phoneNumber) => phoneNumber.id !== id);
+  contacts = contacts.filter((contact) => contact.id !== id);
 
   res.status(204).end();
 });
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
