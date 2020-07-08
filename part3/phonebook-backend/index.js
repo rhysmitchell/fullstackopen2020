@@ -17,11 +17,9 @@ morgan.token('data', function (req) {
   return JSON.stringify(req.body);
 });
 
-let contacts = [];
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>');
-});
+app.get('/', (req, res) =>
+  res.send('<h1>Hello World!</h1>')
+);
 
 app.get('/info', (req, res) => {
   res.send(
@@ -57,10 +55,10 @@ app.post('/api/phonebook', (req, res) => {
   const bigNumber = 1000;
   const randomId = Math.floor(Math.random() * bigNumber + 1);
 
-  const newContact = { ...req.body, id: randomId };
-  contacts = contacts.concat(newContact);
-
-  res.status(200).end();
+  const newContact = new Contact({ ...req.body, id: randomId });
+  newContact.save().then(() =>
+    Contact.find({}).then(contacts => res.json(contacts))
+  );
 });
 
 app.get('/api/phonebook/:id', (req, res) => {
@@ -76,20 +74,22 @@ app.get('/api/phonebook/:id', (req, res) => {
 
 app.put('/api/phonebook/:id', (req, res) => {
   const idToUpdate = Number(req.params.id);
-  const updatedObject = { ...req.body, id: idToUpdate };
+  Contact.findOneAndUpdate({ id: idToUpdate },
+    { name: req.body.name, number: req.body.number },
+    { upsert: true }, function (error) {
+      if (error) {
+        return res.send(500, { error: error });
+      }
 
-  contacts = contacts.map((contact) =>
-    contact.id !== idToUpdate ? contact : updatedObject
-  );
-
-  res.json(contacts);
+      Contact.find({}).then(contacts => res.json(contacts));
+    });
 });
 
 app.delete('/api/phonebook/:id', (req, res) => {
-  const id = Number(req.params.id);
-  contacts = contacts.filter((contact) => contact.id !== id);
-
-  res.status(204).end();
+  const idToDelete = Number(req.params.id);
+  Contact.deleteOne({ id: idToDelete }, function () {
+    Contact.find({}).then(contacts => res.json(contacts));
+  });
 });
 
 const PORT = process.env.PORT || 3001;
