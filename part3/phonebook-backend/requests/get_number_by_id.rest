@@ -1,0 +1,2 @@
+GET http://localhost:3001/api/phonebook/5efb0d4a594a451ee4fe3e34
+Content-Type: application/json

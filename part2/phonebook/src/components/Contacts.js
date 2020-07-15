@@ -14,7 +14,7 @@ const PhonebookList = (props) => {
           person.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .map((person) => (
-          <li key={person.name}>
+          <li key={person.id}>
             {person.name}: {person.number}{' '}
             <button onClick={() => deleteContactClick(person)}>Delete</button>
           </li>
