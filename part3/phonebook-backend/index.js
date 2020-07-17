@@ -1,14 +1,14 @@
 require('dotenv').config();
+const morgan = require('morgan');
+const Contact = require('./models/contact');
 const express = require('express');
 const app = express();
-const Contact = require('./models/contact');
+const cors = require('cors');
 app.use(express.json());
 app.use(express.static('build'));
-
-const cors = require('cors');
 app.use(cors());
 
-const morgan = require('morgan');
+
 
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :data')
@@ -44,17 +44,11 @@ app.post('/api/phonebook', (req, res, next) => {
 
   const name = req.body.name;
   Contact.find({ name: name }).then(contact => {
-    if (contact.length > 0) {
-      return res.status(400).json({
-        error: `Name must be unique`,
-      });
-    }
-
     const newContact = new Contact({ ...req.body });
     newContact.save().then(savedContact =>
       res.json(savedContact)
-    );
-  }).catch(error => next(error));
+    ).catch(error => next(error));
+  });
 });
 
 app.get('/api/phonebook/:id', (req, res, next) => {
@@ -103,6 +97,8 @@ const errorHandler = (error, request, res, next) => {
 
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'Id was in the incorrect format' });
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message });
   }
 
   next(error);
