@@ -75,10 +75,16 @@ const App = () => {
     } else {
       phonebookService.create(newContact).then((response) => {
         setContacts(response.data);
-
+        
         flashMessage({
           type: 'success',
           message: `${newContact.name} was added.`,
+          resetInterval: 5000,
+        });
+      }).catch(error => {
+        flashMessage({
+          type: 'error',
+          message: error.response.data.error,
           resetInterval: 5000,
         });
       });
