@@ -23,10 +23,20 @@ const mostBlogs = (passedBlogs) => {
     };
 };
 
+const mostLikes = (passedBlogs) => {
+    const { author, likes } = passedBlogs.reduce((prev, current) => (+prev.blogs > +current.blogs) ? prev : current)
+
+    return {
+        author: author,
+        likes: likes
+    };
+};
+
 module.exports = {
     blogsExist,
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

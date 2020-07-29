@@ -88,3 +88,10 @@ describe('Author with the most blogs', () => {
     expect(result.blogs).toBe(12)
   })
 })
+
+describe('Author with the most likes', () => {
+  test('Top author', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result.likes).toBe(12)
+  })
+})
