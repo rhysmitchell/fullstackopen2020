@@ -78,7 +78,7 @@ describe('Total likes', () => {
 describe('Blog with the most likes', () => {
   test('Top blog post', () => {
     const result = listHelper.favoriteBlog(blogs)
-    expect(result).toBe(12)
+    expect(result.likes).toBe(12)
   })
 })
 

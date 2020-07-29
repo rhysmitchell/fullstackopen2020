@@ -4,7 +4,15 @@ const dummy = (blogs) => 1;
 
 const totalLikes = (blogs) => blogs[0].likes;
 
-const favoriteBlog = (blogs) => Math.max.apply(Math, blogs.map(blog => blog.likes));
+const favoriteBlog = (passedBlogs) => {
+    const { title, author, likes } = passedBlogs.reduce((prev, current) => (+prev.likes > +current.likes) ? prev : current)
+
+    return {
+        title: title,
+        author: author,
+        likes: likes
+    };
+}
 
 const mostBlogs = (passedBlogs) => {
     const { author, blogs } = passedBlogs.reduce((prev, current) => (+prev.blogs > +current.blogs) ? prev : current)
