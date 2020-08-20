@@ -39,7 +39,7 @@ test('blogs are returned as json', async () => {
 test('id property is named correctly (i.e. not _id)', async () => {
     const response = await api.get('/api/blogs');
     const blogs = response.body;
-    blogs.map(blog => expect(blog.id).toBeDefined());
+    blogs.every(blog => expect(blog.id).toBeDefined());
 });
 
 test('blog can be created', async () => {
@@ -58,5 +58,4 @@ test('blog can be created', async () => {
     expect(blogsAfterAdd.body).toHaveLength(initialBlogs.length + 1)
 });
 
-afterAll(() => mongoose.connection.close());
 afterAll(() => mongoose.connection.close());
