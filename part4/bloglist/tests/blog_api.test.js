@@ -54,13 +54,25 @@ test('blog can be created', async () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-    const blogsAfterAdd = await api.get('/api/blogs');
-    expect(blogsAfterAdd.body).toHaveLength(initialBlogs.length + 1);
+    const blogsAfterAdd = await Blog.find({});
 
-    const titles = blogsAfterAdd.body.map(blog => blog.title)
-    expect(titles).toContain(
-      'Boring blog pt. 3'
-    )
+    expect(blogsAfterAdd.length).toBe(initialBlogs.length + 1);
+
+    const titles = blogsAfterAdd.map(blog => blog.title);
+    expect(titles).toContain('Boring blog pt. 3');
 });
+
+test('blog without likes is defaulted to 0', async () => {
+    await api
+        .post('/api/blogs')
+        .send({
+            title: 'Boring blog pt. 3',
+            author: 'Not Rhys Mitchell',
+            url: 'www.boring-blog.com'
+        });
+
+    const blog = await Blog.findOne({ title: 'Boring blog pt. 3' });
+    expect(blog.likes).toBe(0);
+})
 
 afterAll(() => mongoose.connection.close());
