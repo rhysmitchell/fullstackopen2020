@@ -17,7 +17,12 @@ blogsRouter.get('/:id', async (request, response, next) => {
 })
 
 blogsRouter.post('/', async (request, response, next) => {
+
     const body = request.body;
+    
+    if (!body.title || !body.url) {
+        return response.status(400).end();
+    }
 
     const blog = new Blog({
         title: body.title,

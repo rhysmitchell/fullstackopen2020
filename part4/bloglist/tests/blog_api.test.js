@@ -62,6 +62,19 @@ test('blog can be created', async () => {
     expect(titles).toContain('Boring blog pt. 3');
 });
 
+test('blog without title and url will not add', async () => {
+    await api
+        .post('/api/blogs')
+        .send({
+            author: 'Not Rhys Mitchell',
+            likes: 3
+        })
+        .expect(400)
+
+    const blogsAfterAdd = await Blog.find({});
+    expect(blogsAfterAdd.length).toBe(initialBlogs.length);
+});
+
 test('blog without likes is defaulted to 0', async () => {
     await api
         .post('/api/blogs')
