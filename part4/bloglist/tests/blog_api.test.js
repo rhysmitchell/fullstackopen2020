@@ -55,7 +55,12 @@ test('blog can be created', async () => {
         .expect('Content-Type', /application\/json/);
 
     const blogsAfterAdd = await api.get('/api/blogs');
-    expect(blogsAfterAdd.body).toHaveLength(initialBlogs.length + 1)
+    expect(blogsAfterAdd.body).toHaveLength(initialBlogs.length + 1);
+
+    const titles = blogsAfterAdd.body.map(blog => blog.title)
+    expect(titles).toContain(
+      'Boring blog pt. 3'
+    )
 });
 
 afterAll(() => mongoose.connection.close());
