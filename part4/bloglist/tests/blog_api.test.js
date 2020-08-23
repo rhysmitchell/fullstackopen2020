@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const supertest = require('supertest');
+const mongoose = require('mongoose');
 const app = require('../app');
 
 const api = supertest(app);
@@ -19,6 +19,19 @@ const initialBlogs = [
         likes: 2
     },
 ];
+
+const nonExistingId = async () => {
+    const blog = new Blog({ content: 'willremovethissoon', date: new Date() });
+    await blog.save();
+    await blog.remove();
+
+    return blog._id.toString();
+};
+
+const blogsInDb = async () => {
+    const blogs = await Blog.find({});
+    return blogs.map(blog => blog.toJSON());
+};
 
 beforeEach(async () => {
     await Blog.deleteMany({});
@@ -51,23 +64,23 @@ describe('when there is initially some blogs saved', () => {
 
 describe('viewing a specific blog', () => {
     test('succeeds with a valid id', async () => {
-        const firstBlog = await Blog.findOne({ title: 'Boring blog pt. 1' });
+        const blogsFromDb = await blogsInDb();
+        const blogToView = blogsFromDb[0];
 
         const resultBlog = await api
-            .get(`/api/blogs/${firstBlog._id}`)
+            .get(`/api/blogs/${blogToView.id}`)
             .expect(200)
-            .expect('Content-Type', /application\/json/);
+            .expect('Content-Type', /application\/json/)
 
-        const processedBlogToView = JSON.parse(JSON.stringify(firstBlog));
-        expect(resultBlog.body).toEqual(processedBlogToView);
+        expect(resultBlog.body).toEqual(blogToView);
     });
 
-    test('fails with statuscode 400 if id is invalid', async () => {
-        const invalidId = '5a3d5da59070081a82a3445'
 
+    test('fails with statuscode 404 if note does not exist', async () => {
+        const validNonexistingId = await nonExistingId();
         await api
-            .get(`/api/blogs/${invalidId}`)
-            .expect(400);
+            .get(`/api/notes/${validNonexistingId}`)
+            .expect(404)
     });
 });
 
