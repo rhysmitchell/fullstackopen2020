@@ -6,8 +6,8 @@ blogsRouter.get('/', async (request, response) => {
     response.json(blogs);
 })
 
-blogsRouter.get('/:id', async (request, response, next) => {
-    const blog = await Blog.findById(request.params.id).catch(error => next(error));
+blogsRouter.get('/:id', async (request, response) => {
+    const blog = await Blog.findById(request.params.id);
 
     if (blog) {
         response.json(blog);
@@ -16,7 +16,7 @@ blogsRouter.get('/:id', async (request, response, next) => {
     }
 })
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
 
     const body = request.body;
     
@@ -31,16 +31,16 @@ blogsRouter.post('/', async (request, response, next) => {
         likes: body.likes || 0
     });
 
-    const savedBlog = await blog.save().catch(error => next(error));
+    const savedBlog = await blog.save();
     response.json(savedBlog);
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
-    await Blog.findByIdAndRemove(request.params.id).catch(error => next(error));
+blogsRouter.delete('/:id', async (request, response) => {
+    await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
 })
 
-blogsRouter.put('/:id', async (request, response, next) => {
+blogsRouter.put('/:id', async (request, response) => {
     const body = request.body
 
     const blog = {
@@ -50,7 +50,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
         likes: body.likes
     }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).catch(error => next(error))
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
     response.json(updatedBlog);
 
 })
