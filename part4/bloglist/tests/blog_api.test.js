@@ -84,6 +84,23 @@ describe('viewing a specific blog', () => {
     });
 });
 
+describe('updating a specific blog', () => {
+    test('updating author name succeeds', async () => {
+        const blogsFromDb = await blogsInDb();
+        const blogToView = blogsFromDb[0];
+
+        const updatedBlogToView = { ...blogToView, author: "Might have been Rhys Mitchell" };
+
+        const resultBlog = await api
+            .put(`/api/blogs/${updatedBlogToView.id}`)
+            .send(updatedBlogToView)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        expect(resultBlog.body.author).toEqual(updatedBlogToView.author);
+    });
+});
+
 describe('addition of a new blog', () => {
     test('succeeds with valid data', async () => {
         await api
@@ -152,6 +169,6 @@ describe('deletion of a note', () => {
         const titles = blogsInDb.map(blog => blog.title)
         expect(titles).not.toContain(blogToDelete.title)
     })
-})
+});
 
 afterAll(() => mongoose.connection.close());
