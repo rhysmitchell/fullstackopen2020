@@ -19,7 +19,7 @@ blogsRouter.get('/:id', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
 
     const body = request.body;
-    
+
     if (!body.title || !body.url) {
         return response.status(400).end();
     }
@@ -52,7 +52,6 @@ blogsRouter.put('/:id', async (request, response) => {
 
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
     response.json(updatedBlog);
-
-})
+});
 
 module.exports = blogsRouter
