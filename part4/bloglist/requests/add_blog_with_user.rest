@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "This is the greatest and best title in the world",
+    "author": "Rhys Mitchell",
+    "url": "www.my-improved-website.com",
+    "likes": 10000,
+    "userId": "5f5256ff92717801ad444cae"
+}
