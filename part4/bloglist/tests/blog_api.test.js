@@ -3,7 +3,14 @@ const mongoose = require('mongoose');
 const app = require('../app');
 
 const api = supertest(app);
-const Blog = require('../models/Blog');
+const Blog = require('../models/blog');
+const User = require('../models/user');
+
+const initialUser = {
+    "name": "Initial User",
+    "username": "initialuser",
+    "password": "password"
+};
 
 const initialBlogs = [
     {
@@ -33,11 +40,21 @@ const blogsInDb = async () => {
     return blogs.map(blog => blog.toJSON());
 };
 
+const login = async () => api.post('api/login').send(initialUser);
+
 beforeEach(async () => {
     await Blog.deleteMany({});
+    await User.deleteMany({});
 
-    const blogObjects = initialBlogs.map(blog => new Blog(blog));
-    const promiseArray = blogObjects.map(note => note.save());
+    const newUser = new User(initialUser);
+    await newUser.save();
+
+    const blogObjects = initialBlogs.map(blog => { 
+        blog.user = newUser.id;
+        return new Blog(blog);
+     });
+
+    const promiseArray = blogObjects.map(blog => blog.save());
     await Promise.all(promiseArray);
 });
 
@@ -51,13 +68,13 @@ describe('when there is initially some blogs saved', () => {
     });
 
     test('all blogs are returned', async () => {
-        const response = await api.get('/api/blogs');
-        expect(response.body).toHaveLength(initialBlogs.length);
+        const response = await blogsInDb();
+        expect(response).toHaveLength(initialBlogs.length);
     });
 
     test('a specific note is within the returned blogs', async () => {
-        const response = await api.get('/api/blogs');
-        const blogs = response.body.map(blog => blog.title);
+        const response = await blogsInDb();
+        const blogs = response.map(blog => blog.title);
         expect(blogs).toContain('Boring blog pt. 1');
     });
 });
@@ -72,7 +89,7 @@ describe('viewing a specific blog', () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
-        expect(resultBlog.body).toEqual(blogToView);
+        expect(resultBlog.body.id).toEqual(blogToView.id);
     });
 
 
@@ -136,7 +153,7 @@ describe('addition of a new blog', () => {
     });
 
     test('id property is named correctly (i.e. not _id)', async () => {
-        const response = await api.get('/api/blogs');
+        const response = await blogsInDb();
         const blogs = response.body;
         blogs.every(blog => expect(blog.id).toBeDefined());
     });
