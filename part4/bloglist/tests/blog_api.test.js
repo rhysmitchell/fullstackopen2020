@@ -40,19 +40,18 @@ const blogsInDb = async () => {
     return blogs.map(blog => blog.toJSON());
 };
 
-const login = async () => api.post('api/login').send(initialUser);
+const login = async () => await api.post('/api/login').send(initialUser);
 
 beforeEach(async () => {
     await Blog.deleteMany({});
     await User.deleteMany({});
 
-    const newUser = new User(initialUser);
-    await newUser.save();
+    const newUser = await api.post('/api/users').send(initialUser);
 
-    const blogObjects = initialBlogs.map(blog => { 
-        blog.user = newUser.id;
+    const blogObjects = initialBlogs.map(blog => {
+        blog.user = newUser.body.id;
         return new Blog(blog);
-     });
+    });
 
     const promiseArray = blogObjects.map(blog => blog.save());
     await Promise.all(promiseArray);
@@ -120,15 +119,18 @@ describe('updating a specific blog', () => {
 
 describe('addition of a new blog', () => {
     test('succeeds with valid data', async () => {
+        const token = await login();
+
         await api
             .post('/api/blogs')
+            .set('Authorization', `bearer ${token.body.token}`)
             .send({
                 title: 'Boring blog pt. 3',
                 author: 'Not Rhys Mitchell',
                 url: 'www.boring-blog.com',
                 likes: 3
             })
-            .expect(200)
+            .expect(201)
             .expect('Content-Type', /application\/json/);
 
         const blogsAfterAdd = await Blog.find({});
@@ -153,14 +155,16 @@ describe('addition of a new blog', () => {
     });
 
     test('id property is named correctly (i.e. not _id)', async () => {
-        const response = await blogsInDb();
-        const blogs = response.body;
+        const blogs = await blogsInDb();
         blogs.every(blog => expect(blog.id).toBeDefined());
     });
 
     test('blog without likes is defaulted to 0', async () => {
+        const token = await login();
+        
         await api
             .post('/api/blogs')
+            .set('Authorization', `bearer ${token.body.token}`)
             .send({
                 title: 'Boring blog pt. 3',
                 author: 'Not Rhys Mitchell',
@@ -174,10 +178,12 @@ describe('addition of a new blog', () => {
 
 describe('deletion of a note', () => {
     test('succeeds with status code 204 if id is valid', async () => {
+        const token = await login();
         const blogToDelete = await Blog.findOne({ title: 'Boring blog pt. 1' });
 
         await api
             .delete(`/api/blogs/${blogToDelete._id}`)
+            .set('Authorization', `bearer ${token.body.token}`)
             .expect(204)
 
         const blogsInDb = await Blog.find({});
