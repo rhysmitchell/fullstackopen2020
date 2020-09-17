@@ -6,6 +6,7 @@ import WelcomeMessage from './components/WelcomeMessage'
 import LogoutButton from './components/LogoutButton'
 import BlogList from './components/BlogList'
 import CreateBlogForm from './components/CreateBlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +16,10 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState({
+    type: null,
+    message: null,
+  });
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -33,7 +38,29 @@ const App = () => {
 
   const logout = () => {
     setUser(null);
-    window.localStorage.removeItem('loggedBlogAppUser')
+    window.localStorage.removeItem('loggedBlogAppUser');
+
+    flashMessage({
+      type: 'success',
+      message: `Logout successful.`,
+      resetInterval: 5000,
+    });
+  };
+
+  const flashMessage = (props) => {
+    const { type, message, resetInterval } = props;
+
+    setMessage({
+      type: type,
+      message: message,
+    });
+
+    setTimeout(() => {
+      setMessage({
+        type: null,
+        message: null,
+      });
+    }, resetInterval);
   };
 
   const handleLogin = async (event) => {
@@ -53,8 +80,18 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
+      flashMessage({
+        type: 'success',
+        message: `Login successful.`,
+        resetInterval: 5000,
+      });
     } catch (exception) {
-      console.log(exception);
+      flashMessage({
+        type: 'error',
+        message: `Login failed ${exception}`,
+        resetInterval: 5000,
+      });
     }
   }
 
@@ -62,7 +99,7 @@ const App = () => {
     event.preventDefault()
 
     try {
-      await blogService.create({ title, author, url });
+      const updatedBlog = await blogService.create({ title, author, url });
 
       setTitle('')
       setAuthor('')
@@ -70,6 +107,12 @@ const App = () => {
 
       const updatedBlogs = await blogService.getAll();
       setBlogs(updatedBlogs)
+
+      flashMessage({
+        type: 'success',
+        message: `${updatedBlog.title} by ${updatedBlog.author} was added.`,
+        resetInterval: 5000,
+      });
     } catch (exception) {
       console.log(exception);
     }
@@ -78,6 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification schema={message} />
 
       <LoginForm user={user} handleLogin={handleLogin}
         username={username} setUsername={setUsername} password={password}
