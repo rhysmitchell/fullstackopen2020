@@ -24,6 +24,11 @@ const App = () => {
     }
   }, [])
 
+  const logout = () => {
+    setUser(null);
+    window.localStorage.removeItem('loggedBlogAppUser')
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -73,13 +78,19 @@ const App = () => {
         <button type="submit">login</button>
       </form>}
 
-      {user !== null && `${user.username} is logged in`}
-      {user !== null &&
-        (<ul>{blogs.map(blog =>
+      {user !== null && (<>
+        {user.name} is logged in:&nbsp;
+
+        <button onClick={() => logout()}>Logout</button>
+
+        <ul>{blogs.map(blog =>
           <li key={blog.id}>
             <Blog blog={blog} />
           </li>)}
-        </ul>)}
+        </ul>
+      </>)
+
+      }
     </div>
   )
 }
