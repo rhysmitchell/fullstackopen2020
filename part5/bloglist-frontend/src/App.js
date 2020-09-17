@@ -76,8 +76,8 @@ const App = () => {
       {user !== null && `${user.username} is logged in`}
       {user !== null &&
         (<ul>{blogs.map(blog =>
-          <li>
-            <Blog key={blog.id} blog={blog} />
+          <li key={blog.id}>
+            <Blog blog={blog} />
           </li>)}
         </ul>)}
     </div>
