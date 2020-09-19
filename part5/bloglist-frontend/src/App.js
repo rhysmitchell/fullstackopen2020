@@ -13,9 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [message, setMessage] = useState({
     type: null,
     message: null,
@@ -95,27 +92,18 @@ const App = () => {
     }
   }
 
-  const handleBlogCreation = async (event) => {
-    event.preventDefault()
-
-    try {
-      const updatedBlog = await blogService.create({ title, author, url });
-
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-
-      const updatedBlogs = await blogService.getAll();
-      setBlogs(updatedBlogs)
-
-      flashMessage({
-        type: 'success',
-        message: `${updatedBlog.title} by ${updatedBlog.author} was added.`,
-        resetInterval: 5000,
-      });
-    } catch (exception) {
-      console.log(exception);
-    }
+  const handleBlogCreation = (blog) => {
+    blogService
+      .create(blog)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        flashMessage({
+          type: 'success',
+          message: `${returnedBlog.title} by ${returnedBlog.author} was added.`,
+          resetInterval: 5000,
+        });
+      }
+      )
   }
 
   return (
@@ -130,8 +118,7 @@ const App = () => {
       <WelcomeMessage user={user} />
       <LogoutButton user={user} logout={logout} />
 
-      <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} title={title} setTitle={setTitle}
-        author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
+      <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
 
       <BlogList user={user} blogs={blogs} />
     </div>

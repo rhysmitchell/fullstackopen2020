@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 
-const CreateBlogForm = ({ user, handleBlogCreation, title, setTitle, author, setAuthor, url, setUrl }) => {
+const CreateBlogForm = ({ user, handleBlogCreation }) => {
     const [createBlogVisible, setCreateBlogVisible] = useState(false)
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const addBlog = (event) => {
+        event.preventDefault();
+        handleBlogCreation({title, author, url});
+
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
 
     if (!user) {
         return <></>;
@@ -9,8 +21,8 @@ const CreateBlogForm = ({ user, handleBlogCreation, title, setTitle, author, set
     if (createBlogVisible) {
         return (
             <>
-            <h3>Create new blog</h3>
-                <form onSubmit={handleBlogCreation}>
+                <h3>Create new blog</h3>
+                <form onSubmit={addBlog}>
                     <div>
                         Title
                 <input
@@ -46,7 +58,12 @@ const CreateBlogForm = ({ user, handleBlogCreation, title, setTitle, author, set
         );
     }
     else {
-        return (<><br /><button onClick={() => setCreateBlogVisible(true)}>Create new blog</button></>)
+        return (
+            <>
+                <br />
+                <button onClick={() => setCreateBlogVisible(true)}>Create new blog</button>
+            </>
+        )
     }
 };
 
