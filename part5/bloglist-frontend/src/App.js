@@ -96,7 +96,8 @@ const App = () => {
     blogService
       .create(blog)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        const orderedBlogs = blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes);
+        setBlogs(orderedBlogs)
         flashMessage({
           type: 'success',
           message: `${returnedBlog.title} by ${returnedBlog.author} was added.`,
