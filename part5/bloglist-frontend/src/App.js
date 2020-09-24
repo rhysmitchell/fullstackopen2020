@@ -120,7 +120,7 @@ const App = () => {
 
       <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
 
-      <BlogList user={user} blogs={blogs} />
+      <BlogList user={user} blogs={blogs} setBlogs={setBlogs} />
     </div>
   )
 }
