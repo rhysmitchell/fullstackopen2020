@@ -12,6 +12,14 @@ const Blog = ({ id, blog, setBlogs }) => {
     setBlogs(allBlogs);
   }
 
+  const handleBlogDelete = async blogToDelete => {
+    if (window.confirm(`Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.user.name}?`)) {
+      await blogService.deleteBlog(blogToDelete.id);
+      const allBlogs = await blogService.getAll();
+      setBlogs(allBlogs);
+    }
+  }
+
   return (
     <li key={id}>
       {blog.title} [by {blog.author}]
@@ -23,7 +31,10 @@ const Blog = ({ id, blog, setBlogs }) => {
             {blog.likes}
             <button onClick={() => handleBlogLike(blog)}>Like</button>
           </li>
-          <li>{blog?.user?.name || 'Anonymous user'}</li>
+          <li>{blog.user.name}</li>
+          <li>
+            <button onClick={() => handleBlogDelete(blog)}>Remove</button>
+          </li>
         </ul>)
       }
     </li>)

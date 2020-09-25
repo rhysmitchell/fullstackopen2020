@@ -65,7 +65,6 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        name: "Rhys Mitchell",
         username: username,
         password: password,
       })
@@ -95,9 +94,10 @@ const App = () => {
   const handleBlogCreation = (blog) => {
     blogService
       .create(blog)
-      .then(returnedBlog => {
-        const orderedBlogs = blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes);
-        setBlogs(orderedBlogs)
+      .then(async returnedBlog => {
+        const allBlogs = await blogService.getAll();
+        setBlogs(allBlogs);
+
         flashMessage({
           type: 'success',
           message: `${returnedBlog.title} by ${returnedBlog.author} was added.`,
