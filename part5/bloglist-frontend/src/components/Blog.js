@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import blogService from '../services/blogs';
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ id, blog, setBlogs }) => {
-  const [blogHidden, setBlogHidden] = useState(true);
+  const [blogHidden, setBlogHidden] = useState(true)
 
   const handleBlogLike = async blogToLike => {
-    const updatedBlogLikes = blogToLike.likes += 1;
+    const updatedBlogLikes = blogToLike.likes += 1
 
-    await blogService.update(blogToLike.id, { ...blogToLike, likes: updatedBlogLikes });
-    const allBlogs = await blogService.getAll();
-    setBlogs(allBlogs);
+    await blogService.update(blogToLike.id, { ...blogToLike, likes: updatedBlogLikes })
+    const allBlogs = await blogService.getAll()
+    setBlogs(allBlogs)
   }
 
   const handleBlogDelete = async blogToDelete => {
     if (window.confirm(`Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.user.name}?`)) {
-      await blogService.deleteBlog(blogToDelete.id);
-      const allBlogs = await blogService.getAll();
-      setBlogs(allBlogs);
+      await blogService.deleteBlog(blogToDelete.id)
+      const allBlogs = await blogService.getAll()
+      setBlogs(allBlogs)
     }
   }
 
@@ -40,4 +40,4 @@ const Blog = ({ id, blog, setBlogs }) => {
     </li>)
 }
 
-export default Blog;
+export default Blog

@@ -1,13 +1,13 @@
-import React from 'react';
+import React from 'react'
 
 const WelcomeMessage = ({ user }) => {
-    if (!user) {
-        return <></>;
-    }
+  if (!user) {
+    return <></>
+  }
 
-    return (
-        <>{user.name} is logged in</>
-    );
-};
+  return (
+    <>{user.name} is logged in</>
+  )
+}
 
-export default WelcomeMessage;
+export default WelcomeMessage

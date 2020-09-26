@@ -16,7 +16,7 @@ const App = () => {
   const [message, setMessage] = useState({
     type: null,
     message: null,
-  });
+  })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -34,31 +34,31 @@ const App = () => {
   }, [])
 
   const logout = () => {
-    setUser(null);
-    window.localStorage.removeItem('loggedBlogAppUser');
+    setUser(null)
+    window.localStorage.removeItem('loggedBlogAppUser')
 
     flashMessage({
       type: 'success',
-      message: `Logout successful.`,
+      message: 'Logout successful.',
       resetInterval: 5000,
-    });
-  };
+    })
+  }
 
   const flashMessage = (props) => {
-    const { type, message, resetInterval } = props;
+    const { type, message, resetInterval } = props
 
     setMessage({
       type: type,
       message: message,
-    });
+    })
 
     setTimeout(() => {
       setMessage({
         type: null,
         message: null,
-      });
-    }, resetInterval);
-  };
+      })
+    }, resetInterval)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -79,15 +79,15 @@ const App = () => {
 
       flashMessage({
         type: 'success',
-        message: `Login successful.`,
+        message: 'Login successful.',
         resetInterval: 5000,
-      });
+      })
     } catch (exception) {
       flashMessage({
         type: 'error',
         message: `Login failed ${exception}`,
         resetInterval: 5000,
-      });
+      })
     }
   }
 
@@ -95,14 +95,14 @@ const App = () => {
     blogService
       .create(blog)
       .then(async returnedBlog => {
-        const allBlogs = await blogService.getAll();
-        setBlogs(allBlogs);
+        const allBlogs = await blogService.getAll()
+        setBlogs(allBlogs)
 
         flashMessage({
           type: 'success',
           message: `${returnedBlog.title} by ${returnedBlog.author} was added.`,
           resetInterval: 5000,
-        });
+        })
       }
       )
   }

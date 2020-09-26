@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
 const LogoutButton = ({ user, logout }) => {
-    if (!user) {
-        return <></>;
-    }
+  if (!user) {
+    return <></>
+  }
 
-    return (<button onClick={() => logout()}>Logout</button>);
-};
+  return (<button onClick={() => logout()}>Logout</button>)
+}
 
-export default LogoutButton;
+export default LogoutButton
