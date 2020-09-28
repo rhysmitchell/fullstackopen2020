@@ -18,14 +18,16 @@ const CreateBlogForm = ({ user, handleBlogCreation }) => {
   if (!user) {
     return <></>
   }
+
   if (createBlogVisible) {
     return (
       <>
         <h3>Create new blog</h3>
-        <form onSubmit={addBlog}>
+        <form id='addBlogform' onSubmit={addBlog}>
           <div>
-                        Title
+            Title
             <input
+              id='title'
               type="text"
               value={title}
               name="Title"
@@ -33,8 +35,9 @@ const CreateBlogForm = ({ user, handleBlogCreation }) => {
             />
           </div>
           <div>
-                        Author
+            Author
             <input
+              id='author'
               type="text"
               value={author}
               name="Author"
@@ -43,8 +46,9 @@ const CreateBlogForm = ({ user, handleBlogCreation }) => {
           </div>
 
           <div>
-                        Url
+            Url
             <input
+              id='url'
               type="text"
               value={url}
               name="Url"
@@ -61,7 +65,7 @@ const CreateBlogForm = ({ user, handleBlogCreation }) => {
     return (
       <>
         <br />
-        <button onClick={() => setCreateBlogVisible(true)}>Create new blog</button>
+        <button id='BtnCreateBlog' onClick={() => setCreateBlogVisible(true)}>Create new blog</button>
       </>
     )
   }
