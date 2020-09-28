@@ -23,9 +23,9 @@ const Blog = ({ id, blog, setBlogs }) => {
   return (
     <li key={id}>
       {blog.title} [by {blog.author}]
-      <button onClick={() => setBlogHidden(!blogHidden)}>{blogHidden ? 'Show' : 'Hide'}</button>
+      <button className="expand-blog-button" onClick={() => setBlogHidden(!blogHidden)}>{blogHidden ? 'Show' : 'Hide'}</button>
       {!blogHidden &&
-        (<ul id='innerBlogDetails'>
+        (<ul className='inner-blog-details'>
           <li>{blog.url}</li>
           <li>
             {blog.likes}
