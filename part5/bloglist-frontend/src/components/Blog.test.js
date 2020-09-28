@@ -5,6 +5,7 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   let component
+  let mockHandler
 
   beforeEach(() => {
     const blog = {
@@ -17,8 +18,9 @@ describe('<Blog />', () => {
       }
     }
 
+    mockHandler = jest.fn()
     component = render(
-      <Blog blog={blog} />
+      <Blog blog={blog} handleBlogLike={mockHandler} />
     )
   })
 
@@ -54,5 +56,17 @@ describe('<Blog />', () => {
 
     const innerBlogDetailsAfterClick = component.container.querySelector('.inner-blog-details')
     expect(innerBlogDetailsAfterClick).toBeTruthy()
+  })
+
+  test('Clicking like button twice will fire event twice', () => {
+
+    const button = component.container.querySelector('.expand-blog-button')
+    fireEvent.click(button)
+
+    const likeButton = component.container.querySelector('.like-button')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
