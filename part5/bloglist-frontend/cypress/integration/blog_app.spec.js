@@ -1,15 +1,7 @@
-describe('Blog app', function() {
-  beforeEach(function() {
-    cy.request('POST', 'http://localhost:3001/api/testing/reset')
-
-    const user = {
-      name: 'Rhys Mitchell',
-      username: 'rhysmitchell',
-      password: 'password'
-    }
-
-    cy.request('POST', 'http://localhost:3001/api/users/', user)
-    cy.visit('http://localhost:3000')
+describe('Blog app', function () {
+  beforeEach(function () {
+    cy.ResetDatabase()
+    cy.RegisterUser({ name: 'Rhys Mitchell', username: 'rhysmitchell', password: 'password' })
   })
 
   it('Front page can be opened', function () {
@@ -17,25 +9,42 @@ describe('Blog app', function() {
     cy.contains('Blogs')
   })
 
-  it('Login form is shown', function() {
+  it('Login form is shown', function () {
     cy.visit('http://localhost:3000')
     cy.get('#loginForm').should('be.visible')
     cy.contains('Login')
   })
 
-  it('Valid user can log in', function() {
-    cy.get('#username').type('rhysmitchell')
-    cy.get('#password').type('password')
-    cy.get('#BtnLogin').click()
-
+  it('Valid user can log in', function () {
+    cy.Login({ name: 'Rhys Mitchell', username: 'rhysmitchell', password: 'password' })
     cy.contains('Rhys Mitchell is logged in')
   })
 
-  it('Invalid user can\'t log in', function() {
+  it('Invalid user can\'t log in', function () {
+    cy.Logout()
+    cy.visit('http://localhost:3000')
     cy.get('#username').type('notrhysmitchell')
     cy.get('#password').type('notpassword')
     cy.get('#BtnLogin').click()
-
     cy.contains('Login')
+  })
+
+  it('A blog can be created', function () {
+    cy.Login({ name: 'Rhys Mitchell', username: 'rhysmitchell', password: 'password' })
+    cy.get('#BtnCreateBlog').click()
+
+    const blog = {
+      title: 'Test blog title',
+      author: 'Test blog author',
+      url: 'Test blog url'
+    }
+
+    cy.get('#title').type(blog.title)
+    cy.get('#author').type(blog.author)
+    cy.get('#url').type(blog.author)
+    cy.get('#BtnSubmitBlog').click()
+
+    cy.get('.expand-blog-button').should('be.visible')
+    cy.contains(`${blog.title} [by ${blog.author}]`)
   })
 })

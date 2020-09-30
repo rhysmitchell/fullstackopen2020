@@ -23,3 +23,25 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('RegisterUser', ({ name, username, password }) =>
+  cy.request('POST', 'http://localhost:3001/api/users', { name, username, password })
+)
+
+Cypress.Commands.add('Login', ({ username, password }) => {
+  cy.request('POST', 'http://localhost:3001/api/login', {
+    username, password
+  }).then(({ body }) => {
+    localStorage.setItem('loggedBlogAppUser', JSON.stringify(body))
+    cy.visit('http://localhost:3000')
+  })
+})
+
+Cypress.Commands.add('Logout', () =>
+  window.localStorage.removeItem('loggedBlogAppUser')
+)
+
+Cypress.Commands.add('ResetDatabase', () =>
+  cy.request('POST', 'http://localhost:3001/api/testing/reset')
+)
+
