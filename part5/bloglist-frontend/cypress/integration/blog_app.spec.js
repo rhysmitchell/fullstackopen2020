@@ -24,7 +24,6 @@ describe('Blog app', function() {
   })
 
   it('Valid user can log in', function() {
-    cy.contains('Login').click()
     cy.get('#username').type('rhysmitchell')
     cy.get('#password').type('password')
     cy.get('#BtnLogin').click()
@@ -33,7 +32,6 @@ describe('Blog app', function() {
   })
 
   it('Invalid user can\'t log in', function() {
-    cy.contains('Login').click()
     cy.get('#username').type('notrhysmitchell')
     cy.get('#password').type('notpassword')
     cy.get('#BtnLogin').click()
