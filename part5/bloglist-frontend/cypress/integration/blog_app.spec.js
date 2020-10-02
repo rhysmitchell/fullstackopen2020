@@ -68,4 +68,25 @@ describe('Blog app', function () {
 
     cy.get('.likes-value').contains('1')
   })
+
+  it('A blog can be deleted by the user who created it', function () {
+    cy.Login({ name: 'Rhys Mitchell', username: 'rhysmitchell', password: 'password' })
+    cy.get('#BtnCreateBlog').click()
+
+    const blog = {
+      title: 'Test blog title',
+      author: 'Test blog author',
+      url: 'Test blog url'
+    }
+
+    cy.get('#title').type(blog.title)
+    cy.get('#author').type(blog.author)
+    cy.get('#url').type(blog.author)
+    cy.get('#BtnSubmitBlog').click()
+
+    cy.get('.expand-blog-button').should('be.visible').click()
+    cy.get('.like-button').should('be.visible').click()
+    cy.get('.delete-button').should('be.visible').click()
+    cy.get('.outer-blog-details').should('not.exist')
+  })
 })

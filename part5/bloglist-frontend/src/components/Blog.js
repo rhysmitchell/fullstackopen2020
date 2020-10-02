@@ -4,7 +4,7 @@ const Blog = ({ id, blog, handleBlogLike, handleBlogDelete }) => {
   const [blogHidden, setBlogHidden] = useState(true)
 
   return (
-    <li key={id}>
+    <li className='outer-blog-details' key={id}>
       {blog.title} [by {blog.author}]
       <button className="expand-blog-button" onClick={() => setBlogHidden(!blogHidden)}>{blogHidden ? 'Show' : 'Hide'}</button>
       {!blogHidden &&
@@ -18,7 +18,7 @@ const Blog = ({ id, blog, handleBlogLike, handleBlogDelete }) => {
           </li>
           <li>{blog.user.name}</li>
           <li>
-            <button onClick={() => handleBlogDelete(blog)}>Remove</button>
+            <button className='delete-button' onClick={() => handleBlogDelete(blog)}>Remove</button>
           </li>
         </ul>)
       }
