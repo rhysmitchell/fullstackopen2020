@@ -5,7 +5,7 @@ const Blog = ({ id, blog, handleBlogLike, handleBlogDelete }) => {
 
   return (
     <li className='outer-blog-details' key={id}>
-      {blog.title} [by {blog.author}]
+      <span className='title-value'>{blog.title} [by {blog.author}]</span>
       <button className="expand-blog-button" onClick={() => setBlogHidden(!blogHidden)}>{blogHidden ? 'Show' : 'Hide'}</button>
       {!blogHidden &&
         (<ul className='inner-blog-details'>

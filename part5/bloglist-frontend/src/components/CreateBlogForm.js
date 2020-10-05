@@ -56,7 +56,7 @@ const CreateBlogForm = ({ user, handleBlogCreation }) => {
             />
           </div>
           <button id='BtnSubmitBlog' type="submit">Create</button>
-          <button onClick={() => setCreateBlogVisible(false)}>cancel</button>
+          <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
         </form>
       </>
     )
