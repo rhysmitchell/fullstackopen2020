@@ -1,14 +1,21 @@
 
 const initialState = {
-    message: '[Placeholder Message]'
+    message: null
 }
 
-export const createNotification = (content) => {
+export const createNotification = (message) => {
     return {
         type: 'CREATE_NOTIFICATION',
         data: {
-            message: `${content} was successfully added.`
+            message
         }
+    }
+}
+
+export const clearNotification = () => {
+    return {
+        type: 'CLEAR_NOTIFICATION',
+        data: initialState
     }
 }
 
@@ -16,6 +23,10 @@ const notificationReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'CREATE_NOTIFICATION':
             return action.data
+
+        case 'CLEAR_NOTIFICATION':
+            return action.data
+
         default:
             return state
     }

@@ -8,7 +8,7 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
-  return (
+  return (notification.message &&
     <div style={style}>
       {notification.message}
     </div>

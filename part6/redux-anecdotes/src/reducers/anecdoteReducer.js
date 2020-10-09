@@ -49,6 +49,9 @@ const anecdoteReducer = (state = initialState, action) => {
         anecdote.id !== id ? anecdote : changedAnecdote
       )
 
+    case "CREATE_ANECDOTE":
+      return [...state, action.data]
+
     default:
       return state
   }
