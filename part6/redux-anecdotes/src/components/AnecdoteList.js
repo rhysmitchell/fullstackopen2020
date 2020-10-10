@@ -4,7 +4,13 @@ import { vote } from '../reducers/anecdoteReducer'
 import { createNotification, clearNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
-    const anecdotes = useSelector(state => state.anecdotes)
+    const anecdotes = useSelector(state => {
+        if (state.filter.query) {
+            return state.anecdotes.filter(anecdote => anecdote.content.includes(state.filter.query))
+        }
+
+        return state.anecdotes
+    })
     const dispatch = useDispatch()
 
     const voteClick = anecdote => {
@@ -17,17 +23,18 @@ const AnecdoteList = () => {
     }
 
     return (
-        anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
-            <div key={anecdote.id}>
-                <div>
-                    {anecdote.content}
+        anecdotes
+            .sort((a, b) => b.votes - a.votes).map(anecdote =>
+                <div key={anecdote.id}>
+                    <div>
+                        {anecdote.content}
+                    </div>
+                    <div>
+                        has {anecdote.votes}
+                        <button onClick={() => voteClick(anecdote)}>vote</button>
+                    </div>
                 </div>
-                <div>
-                    has {anecdote.votes}
-                    <button onClick={() => voteClick(anecdote)}>vote</button>
-                </div>
-            </div>
-        )
+            )
     )
 }
 
