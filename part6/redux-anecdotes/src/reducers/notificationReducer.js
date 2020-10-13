@@ -3,19 +3,21 @@ const initialState = {
     message: null
 }
 
-export const createNotification = (message) => {
-    return {
-        type: 'CREATE_NOTIFICATION',
-        data: {
-            message
-        }
-    }
-}
+export const createNotification = props => {
+    const { message, delay } = props
 
-export const clearNotification = () => {
-    return {
-        type: 'CLEAR_NOTIFICATION',
-        data: initialState
+    return async dispatch => {
+        dispatch({
+            type: 'CREATE_NOTIFICATION',
+            data: { message }
+        })
+
+        setTimeout(() => {
+            dispatch({
+                type: 'CLEAR_NOTIFICATION',
+                data: initialState
+            })
+        }, delay)
     }
 }
 
