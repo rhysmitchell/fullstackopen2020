@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, useParams
+  Switch, Route, Link, useParams, useHistory
 } from 'react-router-dom';
 
 const Menu = () => {
@@ -67,6 +67,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  const history = useHistory();
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -80,6 +81,8 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+
+    history.push("/")
   }
 
   return (
@@ -102,10 +105,30 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+}
 
+const Notification = ({ message }) => {
+
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+
+  if (message) {
+    return (
+      <div style={style}>
+        {message}
+      </div>
+    )
+  }
+
+
+  return <></>
 }
 
 const App = () => {
+  const [notification, setNotification] = useState('')
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -123,11 +146,15 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
-
   const addNew = (anecdote) => {
-    anecdote.id = (Math.random() * 10000).toFixed(0)
+    anecdote.id = Number((Math.random() * 10000).toFixed(0))
     setAnecdotes(anecdotes.concat(anecdote))
+
+    setNotification(`${anecdote.content} was successfully added by ${anecdote.author}!`)
+
+    setTimeout(() =>
+      setNotification('')
+      , 10000);
   }
 
   const anecdoteById = (id) =>
@@ -149,6 +176,7 @@ const App = () => {
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
+        <Notification message={notification} />
 
         <Switch>
           <Route path="/anecdotes/:id">
