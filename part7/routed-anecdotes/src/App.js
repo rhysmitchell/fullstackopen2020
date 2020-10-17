@@ -86,6 +86,14 @@ const CreateNew = (props) => {
     history.push("/")
   }
 
+  const clearFormValues = (e) => {
+    e.preventDefault()
+
+    content.clearValue()
+    author.clearValue()
+    info.clearValue()
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -102,7 +110,8 @@ const CreateNew = (props) => {
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
+        <button type='submit'>Create</button>
+        <button onClick={(e) => clearFormValues(e)}>Clear</button>
       </form>
     </div>
   )
