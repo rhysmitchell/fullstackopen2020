@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer {}
+
+{
+    "title": "Let's take a dip in the strawberry river",
+    "author": "Jack Black",
+    "url": "www.groovy.com",
+    "likes": 10000
+}
