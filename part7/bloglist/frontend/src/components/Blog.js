@@ -1,24 +1,27 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { like, remove } from '../reducers/blogReducer'
 
-const Blog = ({ id, blog, handleBlogLike, handleBlogDelete }) => {
+const Blog = (props) => {
   const [blogHidden, setBlogHidden] = useState(true)
+  const dispatch = useDispatch()
 
   return (
-    <li className='outer-blog-details' key={id}>
-      <span className='title-value'>{blog.title} [by {blog.author}]</span>
+    <li className='outer-blog-details' key={props.id}>
+      <span className='title-value'>{props.blog.title} [by {props.blog.author}]</span>
       <button className="expand-blog-button" onClick={() => setBlogHidden(!blogHidden)}>{blogHidden ? 'Show' : 'Hide'}</button>
       {!blogHidden &&
         (<ul className='inner-blog-details'>
-          <li>{blog.url}</li>
+          <li>{props.blog.url}</li>
           <li>
             <span className='likes-value'>
-              {blog.likes}
+              {props.blog.likes}
             </span>
-            <button className='like-button' onClick={() => handleBlogLike(blog)}>Like</button>
+            <button className='like-button' onClick={() => dispatch(like(props.blog))}>Like</button>
           </li>
-          <li>{blog.user.name}</li>
+          <li>{props.blog.user.name}</li>
           <li>
-            <button className='delete-button' onClick={() => handleBlogDelete(blog)}>Remove</button>
+            <button className='delete-button' onClick={() => dispatch(remove(props.blog.id))}>Remove</button>
           </li>
         </ul>)
       }

@@ -7,22 +7,21 @@ import LogoutButton from './components/LogoutButton'
 import BlogList from './components/BlogList'
 import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationReducer'
+import { initialise } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
+
+  useEffect(() => {
+    dispatch(initialise())
+  }, [dispatch])
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -79,9 +78,6 @@ const App = () => {
     blogService
       .create(blog)
       .then(async returnedBlog => {
-        const allBlogs = await blogService.getAll()
-        setBlogs(allBlogs)
-
         dispatch(createNotification({
           type: 'success',
           message: `${returnedBlog.title} by ${returnedBlog.author} was added.`,
@@ -104,7 +100,7 @@ const App = () => {
 
       <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
 
-      <BlogList user={user} blogs={blogs} setBlogs={setBlogs} />
+      <BlogList user={user} blogs={blogs} />
     </div>
   )
 }
