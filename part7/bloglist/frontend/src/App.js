@@ -9,11 +9,13 @@ import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationReducer'
+import { setLoggedInUser, setLoggedOutUser } from './reducers/userReducer'
 import { initialise } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
 
   useEffect(() => {
     dispatch(initialise())
@@ -21,20 +23,18 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setLoggedInUser(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const logout = () => {
-    setUser(null)
-    window.localStorage.removeItem('loggedBlogAppUser')
+    dispatch(setLoggedOutUser())
     dispatch(createNotification({
       type: 'success',
       message: 'Logout successful.',
@@ -55,7 +55,7 @@ const App = () => {
         'loggedBlogAppUser', JSON.stringify(user)
       )
 
-      setUser(user)
+      dispatch(setLoggedInUser(user))
       setUsername('')
       setPassword('')
 
@@ -91,9 +91,13 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification />
 
-      <LoginForm user={user} handleLogin={handleLogin}
-        username={username} setUsername={setUsername} password={password}
-        setPassword={setPassword} />
+      <LoginForm user={user}
+        handleLogin={handleLogin}
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+      />
 
       <WelcomeMessage user={user} />
       <LogoutButton user={user} logout={logout} />

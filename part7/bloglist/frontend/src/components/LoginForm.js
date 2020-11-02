@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-
-
 const LoginForm = ({ user, handleLogin, username, setUsername, password, setPassword }) => {
   if (user) {
     return <></>

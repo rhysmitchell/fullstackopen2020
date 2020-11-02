@@ -9,7 +9,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 const combinedReducer = combineReducers({
   blogs: blogReducer,
   notifications: notificationReducer,
-  users: userReducer
+  user: userReducer
 })
 
 export const store = createStore(combinedReducer, composeWithDevTools(applyMiddleware(thunk)))
