@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Users from './components/Users'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -11,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationReducer'
 import { setLoggedInUser, setLoggedOutUser } from './reducers/userReducer'
 import { initialise } from './reducers/blogReducer'
+import { BrowserRouter as Router, Switch, Route, } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -91,20 +93,34 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification />
 
-      <LoginForm user={user}
-        handleLogin={handleLogin}
-        username={username}
-        setUsername={setUsername}
-        password={password}
-        setPassword={setPassword}
-      />
+      <Router>
+        <Switch>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/">
+            {user && (
+              <>
+                <WelcomeMessage user={user} />
+                <LogoutButton user={user} logout={logout} />
+                <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
+                <BlogList user={user} blogs={blogs} />
+              </>
+            )}
 
-      <WelcomeMessage user={user} />
-      <LogoutButton user={user} logout={logout} />
+            {!user && (
+              <LoginForm user={user}
+                handleLogin={handleLogin}
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+              />
+            )}
+          </Route>
+        </Switch>
+      </Router>
 
-      <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
-
-      <BlogList user={user} blogs={blogs} />
     </div>
   )
 }

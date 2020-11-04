@@ -7,7 +7,7 @@ const Blog = (props) => {
   const dispatch = useDispatch()
 
   return (
-    <li className='outer-blog-details' key={props.id}>
+    <li className='outer-blog-details' key={props.blog.id}>
       <span className='title-value'>{props.blog.title} [by {props.blog.author}]</span>
       <button className="expand-blog-button" onClick={() => setBlogHidden(!blogHidden)}>{blogHidden ? 'Show' : 'Hide'}</button>
       {!blogHidden &&

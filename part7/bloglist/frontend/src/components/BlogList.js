@@ -8,7 +8,7 @@ const BlogList = ({ blogs, user }) => {
 
   return (<ul>
     {
-      blogs.map(blog => <Blog key={blog.id} id={blog.id} blog={blog} />)
+      blogs.map(blog => <Blog key={blog.id} blog={blog} />)
     }</ul>)
 }
 
