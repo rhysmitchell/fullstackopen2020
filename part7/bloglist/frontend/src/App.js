@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Users from './components/Users'
+import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -13,6 +14,7 @@ import { createNotification } from './reducers/notificationReducer'
 import { setLoggedInUser, setLoggedOutUser } from './reducers/userReducer'
 import { initialise } from './reducers/blogReducer'
 import { BrowserRouter as Router, Switch, Route, } from 'react-router-dom'
+import { getUsers } from './reducers/usersReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -20,6 +22,7 @@ const App = () => {
   const user = useSelector((state) => state.user)
 
   useEffect(() => {
+    dispatch(getUsers())
     dispatch(initialise())
   }, [dispatch])
 
@@ -95,6 +98,9 @@ const App = () => {
 
       <Router>
         <Switch>
+          <Route path="/users/:id">
+            <User blogs={blogs} user={user} />
+          </Route>
           <Route path="/users">
             <Users />
           </Route>
