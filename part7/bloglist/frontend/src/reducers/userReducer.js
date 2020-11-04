@@ -18,7 +18,7 @@ export const setLoggedOutUser = () => {
 const userReducer = (state = {}, action) => {
   switch (action.type) {
   case 'SET_LOGGED_IN_USER':
-    return { ...state, user: action.data }
+    return action.data
 
   case 'SET_LOGGED_OUT_USER':
     window.localStorage.removeItem('loggedBlogAppUser')
