@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
+import Navigation from './components/Navigation'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -94,10 +95,11 @@ const App = () => {
 
   return (
     <div>
-      <h2>Blogs</h2>
-      <Notification />
-
       <Router>
+        <Navigation user={user} logout={logout} />
+        <h2>Blogs</h2>
+        <Notification />
+
         <Switch>
           <Route path="/blogs/:id">
             <Blog blogs={blogs} />
@@ -111,8 +113,6 @@ const App = () => {
           <Route path="/">
             {user && (
               <>
-                <WelcomeMessage user={user} />
-                <LogoutButton user={user} logout={logout} />
                 <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
                 <BlogList user={user} blogs={blogs} />
               </>
