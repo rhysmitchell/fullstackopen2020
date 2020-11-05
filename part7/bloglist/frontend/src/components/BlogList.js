@@ -1,5 +1,5 @@
 import React from 'react'
-import Blog from './Blog'
+import { Link } from 'react-router-dom'
 
 const BlogList = ({ blogs, user }) => {
   if (!user) {
@@ -8,7 +8,7 @@ const BlogList = ({ blogs, user }) => {
 
   return (<ul>
     {
-      blogs.map(blog => <Blog key={blog.id} blog={blog} />)
+      blogs.map(blog => <li key={blog.id}><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></li>)
     }</ul>)
 }
 
