@@ -15,7 +15,7 @@ export const setLoggedOutUser = () => {
   }
 }
 
-const userReducer = (state = {}, action) => {
+const userReducer = (state = null, action) => {
   switch (action.type) {
   case 'SET_LOGGED_IN_USER':
     return action.data
