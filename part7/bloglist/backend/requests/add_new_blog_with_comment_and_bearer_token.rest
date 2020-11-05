@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/blogs/{}/comments
+Content-Type: application/json
+Authorization: Bearer {}
+
+{
+    "comments": ["Really insightful!"]
+}
