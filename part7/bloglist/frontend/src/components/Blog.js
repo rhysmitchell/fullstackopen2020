@@ -1,16 +1,27 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { like, remove } from '../reducers/blogReducer'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { like, remove, addComment } from '../reducers/blogReducer'
 import { useParams } from 'react-router-dom'
 
-const Blog = ({ blogs }) => {
+const Blog = () => {
+  
   const id = useParams()?.id
+
+  const blogs = useSelector(state => state.blogs)
   const blog = blogs.filter(blog => blog.id === id)
+  const [comment, setComment] = useState('')
 
   const dispatch = useDispatch()
 
   if (!blog.length) {
     return null
+  }
+
+  const addCommentToBlog = (event) => {
+    event.preventDefault()
+
+    dispatch(addComment(id, comment))
+    setComment('')
   }
 
   const blogToDisplay = blog[0]
@@ -34,8 +45,12 @@ const Blog = ({ blogs }) => {
       </ul>
 
       <h3>Comments</h3>
+      <form onSubmit={addCommentToBlog}>
+        <input type='text' onChange={(e) => setComment(e.target.value)} />
+        <button type="submit">Add Comment</button>
+      </form>
       <ul>
-        {blogToDisplay.comments.map(comment => <li>{comment}</li>)}
+        {blogToDisplay.comments.map((comment, index) => <li key={index}>{comment}</li>)}
       </ul>
     </div>)
 }

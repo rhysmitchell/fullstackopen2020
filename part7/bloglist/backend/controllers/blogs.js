@@ -20,10 +20,10 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/:id/comments', async (request, response) => {
     const blog = await Blog.findById(request.params.id);
-    const comments = request.body.comments;
+    const comment = request.body.comment;
 
     if (blog) {
-        blog.comments = blog.comments.concat(comments);
+        blog.comments = blog.comments.concat(comment);
         await blog.save();
 
         response.json(blog.toJSON());

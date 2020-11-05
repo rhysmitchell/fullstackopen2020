@@ -12,6 +12,15 @@ const getAll = () => {
   return request.then(response => response.data.sort((a, b) => b.likes - a.likes))
 }
 
+const addComment = async (id, comment) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = await axios.post(`${baseUrl}/${id}/comments`, comment, config)
+  return response.data
+}
+
 const create = async newObject => {
   const config = {
     headers: { Authorization: token }
@@ -35,4 +44,4 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, deleteBlog, update, setToken }
+export default { getAll, addComment, create, deleteBlog, update, setToken }
