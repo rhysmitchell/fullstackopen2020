@@ -20,7 +20,7 @@ const Blog = ({ blogs }) => {
     <div className='outer-blog-details' key={blogToDisplay.id}>
       <h3 className='title-value'>{blogToDisplay.title} [by {blogToDisplay.author}]</h3>
       <ul className='inner-blog-details'>
-        <li>{blogToDisplay.url}</li>
+        <li><a href={blogToDisplay.url}>{blogToDisplay.url}</a></li>
         <li>
           <span className='likes-value'>
             {blogToDisplay.likes}
