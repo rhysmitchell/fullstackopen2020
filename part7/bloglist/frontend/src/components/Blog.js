@@ -9,7 +9,7 @@ const Blog = ({ blogs }) => {
 
   const dispatch = useDispatch()
 
-  if (!blog) {
+  if (!blog.length) {
     return null
   }
 
@@ -33,6 +33,10 @@ const Blog = ({ blogs }) => {
         </li>
       </ul>
 
+      <h3>Comments</h3>
+      <ul>
+        {blogToDisplay.comments.map(comment => <li>{comment}</li>)}
+      </ul>
     </div>)
 }
 

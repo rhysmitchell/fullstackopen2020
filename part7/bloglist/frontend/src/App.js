@@ -24,12 +24,7 @@ const App = () => {
   useEffect(() => {
     dispatch(getUsers())
     dispatch(initialise())
-  }, [dispatch])
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -37,6 +32,9 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [dispatch])
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const logout = () => {
     dispatch(setLoggedOutUser())
