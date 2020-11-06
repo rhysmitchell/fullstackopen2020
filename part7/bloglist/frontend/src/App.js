@@ -15,6 +15,9 @@ import { setLoggedInUser, setLoggedOutUser } from './reducers/userReducer'
 import { initialise } from './reducers/blogReducer'
 import { BrowserRouter as Router, Switch, Route, } from 'react-router-dom'
 import { getUsers } from './reducers/usersReducer'
+import { Container, CssBaseline } from '@material-ui/core'
+import WelcomeMessage from './components/WelcomeMessage'
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -90,10 +93,11 @@ const App = () => {
   }
 
   return (
-    <div>
-      <Router>
-        <Navigation user={user} logout={logout} />
-        <h2>Blogs</h2>
+    <Router>
+      <Navigation user={user} logout={logout} />
+      <WelcomeMessage user={user} />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
         <Notification />
 
         <Switch>
@@ -125,9 +129,8 @@ const App = () => {
             )}
           </Route>
         </Switch>
-      </Router>
-
-    </div>
+      </Container>
+    </Router>
   )
 }
 
