@@ -49,10 +49,10 @@ const Navigation = ({ user }) => {
         </Button>
         {user
           ? <div className={classes.rightToolbar}>
-            <span color="inherit" component={Link}>
+            <span color="inherit" component={Link} to='#'>
               {user.name}
             </span>
-            <Button color="inherit" component={Link} onClick={logout}>
+            <Button color="inherit" component={Link} onClick={logout} to='#'>
               Logout
             </Button>
           </div>
