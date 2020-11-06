@@ -11,13 +11,11 @@ import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationReducer'
-import { setLoggedInUser, setLoggedOutUser } from './reducers/userReducer'
+import { setLoggedInUser } from './reducers/userReducer'
 import { initialise } from './reducers/blogReducer'
-import { BrowserRouter as Router, Switch, Route, } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { getUsers } from './reducers/usersReducer'
-import { Container, CssBaseline } from '@material-ui/core'
-import WelcomeMessage from './components/WelcomeMessage'
-
+import { Container, CssBaseline, Typography } from '@material-ui/core'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -38,15 +36,6 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  const logout = () => {
-    dispatch(setLoggedOutUser())
-    dispatch(createNotification({
-      type: 'success',
-      message: 'Logout successful.',
-      resetInterval: 5000,
-    }))
-  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -94,8 +83,7 @@ const App = () => {
 
   return (
     <Router>
-      <Navigation user={user} logout={logout} />
-      <WelcomeMessage user={user} />
+      <Navigation user={user} />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Notification />
@@ -113,6 +101,9 @@ const App = () => {
           <Route path="/">
             {user && (
               <>
+                <Typography variant="h5">
+                  Blogs
+                </Typography>
                 <CreateBlogForm user={user} handleBlogCreation={handleBlogCreation} />
                 <BlogList user={user} blogs={blogs} />
               </>
