@@ -1,8 +1,12 @@
 import React from 'react'
+import { Typography } from '@material-ui/core'
+
 
 const Users = ({ user, blogs }) => {
   return (<>
-    <h2>{user.name}&apos;s blogs:</h2>
+    <Typography variant="h5">
+      {user?.name}&apos;s blogs:
+    </Typography>
     <table>
       <thead>
         <tr>

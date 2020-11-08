@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { create } from '../reducers/blogReducer'
+import { Button } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
+import TextField from '@material-ui/core/TextField'
+
 
 const CreateBlogForm = ({ user }) => {
   const dispatch = useDispatch()
@@ -29,17 +33,17 @@ const CreateBlogForm = ({ user }) => {
         <form id='addBlogform' onSubmit={addBlog}>
           <div>
             Title
-            <input
+            <TextField
               id='title'
-              type="text"
+              type='text'
               value={title}
-              name="Title"
+              name='Title'
               onChange={(e) => setTitle(e.currentTarget.value)}
             />
           </div>
           <div>
             Author
-            <input
+            <TextField
               id='author'
               type="text"
               value={author}
@@ -50,7 +54,7 @@ const CreateBlogForm = ({ user }) => {
 
           <div>
             Url
-            <input
+            <TextField
               id='url'
               type="text"
               value={url}
@@ -58,8 +62,24 @@ const CreateBlogForm = ({ user }) => {
               onChange={(e) => setUrl(e.currentTarget.value)}
             />
           </div>
-          <button id='BtnSubmitBlog' type="submit">Create</button>
-          <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
+
+          <br />
+
+          <Button
+            id='BtnSubmitBlog'
+            variant="text"
+            color="primary"
+            size="small"
+            startIcon={<AddIcon />}
+            type='submit'
+          >
+            Create
+          </Button>
+
+          <Button
+            size="small"
+            variant="text"
+            onClick={() => setCreateBlogVisible(false)}>Cancel</Button>
         </form>
       </>
     )
@@ -68,7 +88,16 @@ const CreateBlogForm = ({ user }) => {
     return (
       <>
         <br />
-        <button id='BtnCreateBlog' onClick={() => setCreateBlogVisible(true)}>Create new blog</button>
+        <Button
+          id='BtnCreateBlog'
+          variant="contained"
+          color="primary"
+          size="small"
+          startIcon={<AddIcon />}
+          onClick={() => setCreateBlogVisible(true)}
+        >
+          Create New Blog
+        </Button>
       </>
     )
   }
