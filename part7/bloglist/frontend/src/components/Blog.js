@@ -7,8 +7,8 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import WebAssetIcon from '@material-ui/icons/WebAsset'
 import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, TextField } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person'
-import CancelIcon from '@material-ui/icons/Cancel'
-import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete'
+import AddIcon from '@material-ui/icons/Add'
 
 const Blog = () => {
 
@@ -41,9 +41,11 @@ const Blog = () => {
 
         <CardContent>
           <List>
-            <Button className='delete-button' size="small" style={{ float: 'right', color: 'red' }} onClick={() => dispatch(remove(blogToDisplay.id))}>
-              <CancelIcon />
-            </Button>
+            <Button className='delete-button' size="small" style={{ float: 'right' }} onClick={() => dispatch(remove(blogToDisplay.id))}>
+              <DeleteIcon />
+                Delete
+              </Button>
+
             <ListItem className='title-value' component='a' href={blogToDisplay.url}>
               <ListItemAvatar>
                 <Avatar>
@@ -80,13 +82,18 @@ const Blog = () => {
           </Typography>
 
           <form onSubmit={addCommentToBlog}>
-            <TextField type='text' onChange={(e) => setComment(e.target.value)} />
+            <TextField type='text' fullWidth={true} onChange={(e) => setComment(e.target.value)} />
             <br />
-            <Button size="small" variant="contained" type="submit">
+            <br />
+            <Button size="small" color="primary" variant="contained" style={{float: 'right'}} type="submit">
               Add
               <AddIcon />
             </Button>
           </form>
+
+          <br/>
+          <br/>
+          
           <ul>
             {blogToDisplay.comments.map((comment, index) => <li key={index}>{comment}</li>)}
           </ul>

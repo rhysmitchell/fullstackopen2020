@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { setLoggedOutUser } from '../reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import { createNotification } from '../reducers/notificationReducer'
+import { useHistory } from 'react-router-dom'
 
 
 const useStyles = makeStyles({
@@ -21,11 +22,14 @@ const useStyles = makeStyles({
 })
 
 const Navigation = ({ user }) => {
+  const history = useHistory()
   const classes = useStyles()
   const dispatch = useDispatch()
 
   const logout = () => {
     dispatch(setLoggedOutUser())
+
+    history.push('/')
 
     dispatch(createNotification({
       type: 'success',
