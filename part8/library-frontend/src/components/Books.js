@@ -9,7 +9,6 @@ query {
     published 
   }
 }
-
 `
 
 const Books = (props) => {
