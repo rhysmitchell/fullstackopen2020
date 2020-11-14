@@ -39,3 +39,12 @@ query {
     }
   }
 `
+
+export const EDIT_BIRTH_YEAR = gql`
+  mutation editAuthor($name: String!, $setBornTo: Int!) {
+    editAuthor(name: $name, setBornTo: $setBornTo) {
+      name
+      born
+    }
+  }
+`
