@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import { ALL_AUTHORS, EDIT_BIRTH_YEAR } from '../queries'
+import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 import Select from 'react-select';
 
 const Authors = (props) => {
@@ -10,7 +10,7 @@ const Authors = (props) => {
 
   const authors = useQuery(ALL_AUTHORS)
 
-  const [editBirthYear] = useMutation(EDIT_BIRTH_YEAR, {
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
@@ -25,7 +25,7 @@ const Authors = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    editBirthYear({
+    editAuthor({
       variables: { name, setBornTo: parseInt(born) },
     })
 
