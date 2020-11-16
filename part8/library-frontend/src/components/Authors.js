@@ -25,9 +25,14 @@ const Authors = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    editAuthor({
-      variables: { name, setBornTo: parseInt(born) },
-    })
+    try {
+      await editAuthor({
+        variables: { name, setBornTo: parseInt(born) },
+      })
+    } catch (error) {
+      console.log(error.message)
+    }
+
 
     setName('')
     setBorn('')
