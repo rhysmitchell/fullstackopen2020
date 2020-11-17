@@ -1,8 +1,10 @@
-const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
+const jwt = require('jsonwebtoken')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Book = require('./models/Book')
 const Author = require('./models/Author')
+const User = require('./models/User')
 
 mongoose.set('useFindAndModify', false)
 
@@ -32,7 +34,17 @@ const typeDefs = gql`
     bookCount: Int!
   }
 
+  type User {
+    username: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Query {
+    me: User
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
@@ -51,11 +63,22 @@ const typeDefs = gql`
       name: String!
       setBornTo: Int!
       ): Author
+
+      createUser(
+        username: String!
+        favouriteGenre: String!
+      ): User
+
+      login(
+        username: String!
+        password: String!
+      ): Token
   }
 `
 
 const resolvers = {
   Query: {
+    me: async (root, args, context) => context.currentUser,
     authorCount: () => Author.collection.countDocuments(),
     bookCount: () => Book.collection.countDocument(),
     allAuthors: () => Author.find({}),
@@ -94,9 +117,40 @@ const resolvers = {
       await Book.find({ author: root.id }).countDocuments(),
   },
   Mutation: {
-    addBook: async (root, args) => {
-      let author = await Author.findOne({ name: args.author })
+    createUser: async (root, args) => {
+      const user = new User({
+        username: args.username,
+        favouriteGenre: args.favouriteGenre,
+      })
+      try {
+        await user.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return user
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
 
+      if (!user || args.password !== 'password') {
+        throw new UserInputError('Invalid password!')
+      }
+
+      const token = {
+        username: user.username,
+        id: user._id,
+      }
+
+      return { value: jwt.sign(token, process.env.SECRET) }
+    },
+    addBook: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError('User is not authenticated to add books.')
+      }
+
+      let author = await Author.findOne({ name: args.author })
       if (!author) {
         author = new Author({
           id: uuid(),
@@ -124,21 +178,27 @@ const resolvers = {
     },
 
     editAuthor: async (root, args) => {
-      const authorExists = await Author.findOne({ name: args.name })
-      if (!authorExists) {
-        return null
-      }
+      if (!context.currentUser) {
+        {
+          throw new AuthenticationError('User not authenticated to edit books.')
+        }
 
-      try {
-        return await Author.findOneAndUpdate(
-          { name: args.name },
-          { born: args.setBornTo },
-          { new: true }
-        )
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        })
+        let author = await Author.findOne({ name: args.name })
+        if (!author) {
+          return null
+        }
+
+        try {
+          author = await Author.findOneAndUpdate(
+            { name: args.name },
+            { born: args.setBornTo },
+            { new: true }
+          )
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
       }
     }
   }
@@ -147,6 +207,14 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(auth.substring(7), process.env.SECRET)
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
+    }
+  },
 })
 
 server.listen().then(({ url }) => {
