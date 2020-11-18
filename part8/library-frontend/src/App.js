@@ -4,8 +4,10 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
+  const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
   const [message, setMessage] = useState({
     type: null,
@@ -28,30 +30,40 @@ const App = () => {
     }, resetInterval)
   }
 
+
   return (
     <div>
-      <div>
-        <button onClick={() => setPage('authors')}>authors</button>
-        <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
-      </div>
-
       <Notification schema={message} />
 
-      <Authors
-        flashMessage={flashMessage}
-        show={page === 'authors'}
-      />
+      {!token && (
+        <LoginForm
+          setToken={setToken}
+          flashMessage={flashMessage}
+        />
+      )}
 
-      <Books
-        show={page === 'books'}
-      />
+      {token && (<>
+        <div>
+          <button onClick={() => setPage('authors')}>authors</button>
+          <button onClick={() => setPage('books')}>books</button>
+          <button onClick={() => setPage('add')}>add book</button>
+        </div>
 
-      <NewBook
-        flashMessage={flashMessage}
-        show={page === 'add'}
-      />
 
+        <Authors
+          flashMessage={flashMessage}
+          show={page === 'authors'}
+        />
+
+        <Books
+          show={page === 'books'}
+        />
+
+        <NewBook
+          flashMessage={flashMessage}
+          show={page === 'add'}
+        />
+      </>)}
     </div>
   )
 }
