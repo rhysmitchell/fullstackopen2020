@@ -5,6 +5,8 @@ import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 import Select from 'react-select';
 
 const Authors = (props) => {
+  const { flashMessage, show } = props;
+
   const [name, setName] = useState('')
   const [born, setBorn] = useState(0)
 
@@ -14,7 +16,7 @@ const Authors = (props) => {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
@@ -30,7 +32,11 @@ const Authors = (props) => {
         variables: { name, setBornTo: parseInt(born) },
       })
     } catch (error) {
-      console.log(error.message)
+      flashMessage({
+        type: 'error',
+        message: error.message,
+        resetInterval: 5000,
+      })
     }
 
 
