@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 
 const App = () => {
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(localStorage.getItem('user-token'))
   const [page, setPage] = useState('authors')
   const [message, setMessage] = useState({
     type: null,

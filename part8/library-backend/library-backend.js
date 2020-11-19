@@ -78,7 +78,9 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    me: async (root, args, context) => context.currentUser,
+    me: (root, args, context) => {
+      return context.currentUser
+    },
     authorCount: () => Author.collection.countDocuments(),
     bookCount: () => Book.collection.countDocument(),
     allAuthors: () => Author.find({}),
@@ -177,28 +179,26 @@ const resolvers = {
       return await newBook.populate('author').execPopulate()
     },
 
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
       if (!context.currentUser) {
-        {
-          throw new AuthenticationError('User not authenticated to edit books.')
-        }
+        throw new AuthenticationError('User not authenticated to edit books.')
+      }
 
-        let author = await Author.findOne({ name: args.name })
-        if (!author) {
-          return null
-        }
+      let author = await Author.findOne({ name: args.name })
+      if (!author) {
+        return null
+      }
 
-        try {
-          author = await Author.findOneAndUpdate(
-            { name: args.name },
-            { born: args.setBornTo },
-            { new: true }
-          )
-        } catch (error) {
-          throw new UserInputError(error.message, {
-            invalidArgs: args,
-          })
-        }
+      try {
+        author = await Author.findOneAndUpdate(
+          { name: args.name },
+          { born: args.setBornTo },
+          { new: true }
+        )
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
     }
   }
@@ -210,11 +210,13 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), process.env.SECRET)
-      const currentUser = await User.findById(decodedToken.id)
+      const decodedToken = jwt.verify(
+        auth.substring(7), process.env.SECRET
+      )
+      const currentUser = await User.findById(decodedToken.id).populate('friends')
       return { currentUser }
     }
-  },
+  }
 })
 
 server.listen().then(({ url }) => {
