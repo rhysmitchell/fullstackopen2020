@@ -5,6 +5,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import { useApolloClient } from '@apollo/client'
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('user-token'))
@@ -13,6 +14,8 @@ const App = () => {
     type: null,
     message: null,
   })
+
+  const client = useApolloClient()
 
   const flashMessage = (props) => {
     const { type, message, resetInterval } = props
@@ -30,40 +33,48 @@ const App = () => {
     }, resetInterval)
   }
 
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
+
 
   return (
     <div>
       <Notification schema={message} />
 
-      {!token && (
-        <LoginForm
-          setToken={setToken}
-          flashMessage={flashMessage}
-        />
-      )}
-
-      {token && (<>
-        <div>
-          <button onClick={() => setPage('authors')}>authors</button>
-          <button onClick={() => setPage('books')}>books</button>
+      <div>
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        {token && <>
+          <button onClick={logout}>logout</button>
           <button onClick={() => setPage('add')}>add book</button>
-        </div>
+        </>}
+        {!token && <button onClick={() => setPage('login')}>login</button>}
+      </div>
 
 
-        <Authors
-          flashMessage={flashMessage}
-          show={page === 'authors'}
-        />
+      <Authors
+        token={token}
+        flashMessage={flashMessage}
+        show={page === 'authors'}
+      />
 
-        <Books
-          show={page === 'books'}
-        />
+      <Books
+        show={page === 'books'}
+      />
 
-        <NewBook
-          flashMessage={flashMessage}
-          show={page === 'add'}
-        />
-      </>)}
+      <NewBook
+        flashMessage={flashMessage}
+        show={page === 'add'}
+      />
+
+      <LoginForm
+        setToken={setToken}
+        flashMessage={flashMessage}
+        show={page === 'login' && !token}
+      />
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client'
 import { LOGIN } from '../queries'
 
 const LoginForm = props => {
-    const { flashMessage, setToken } = props;
+    const { flashMessage, setToken, show } = props;
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -17,6 +17,7 @@ const LoginForm = props => {
         }
     })
 
+
     useEffect(() => {
         if (result.data) {
             const token = result.data.login.value
@@ -25,9 +26,12 @@ const LoginForm = props => {
         }
     }, [result.data]) // eslint-disable-line
 
+    if (!show) {
+        return null
+    }
+
     const submit = async (event) => {
         event.preventDefault()
-
         login({ variables: { username, password } })
     }
 

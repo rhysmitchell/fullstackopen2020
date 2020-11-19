@@ -5,7 +5,7 @@ import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 import Select from 'react-select';
 
 const Authors = (props) => {
-  const { flashMessage, show } = props;
+  const { token, flashMessage, show } = props;
 
   const [name, setName] = useState('')
   const [born, setBorn] = useState(0)
@@ -70,28 +70,30 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      <h2>Set birthyear</h2>
-      <form onSubmit={submit}>
-        <div>
-          name
+      {token && <>
+        <h2>Set birthyear</h2>
+        <form onSubmit={submit}>
+          <div>
+            name
           <Select
-            options={authorNames}
-            onChange={({ value }) => setName(value)}
-          />
-        </div>
+              options={authorNames}
+              onChange={({ value }) => setName(value)}
+            />
+          </div>
 
-        <div>
-          born
+          <div>
+            born
           <input
-            value={born}
-            onChange={({ target }) => setBorn(target.value)}
-          />
-        </div>
+              value={born}
+              onChange={({ target }) => setBorn(target.value)}
+            />
+          </div>
 
-        <button type="submit">
-          update author
+          <button type="submit">
+            update author
         </button>
-      </form>
+        </form>
+      </>}
     </div>
   )
 }
