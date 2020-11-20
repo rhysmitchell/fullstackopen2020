@@ -31,6 +31,7 @@ query allBooks($genre: String, $author: String) {
       author {
         name
       }
+      genres
     }
   }
 `
