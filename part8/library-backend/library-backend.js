@@ -35,8 +35,9 @@ const typeDefs = gql`
   }
 
   type User {
-    username: String!
     id: ID!
+    username: String!
+    favouriteGenre: String!
   }
 
   type Token {
