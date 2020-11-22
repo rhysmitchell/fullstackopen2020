@@ -13,15 +13,14 @@ const Recommendations = (props) => {
     const [me, setMe] = useState(null)
     const [recommendedBooks, setRecommendedBooks] = useState([])
 
-    useQuery(ME, {
-        onCompleted: ({ me }) => setMe(me)
-    })
+    const meQuery = useQuery(ME)
 
     useEffect(() => {
-        if (me) {
-            fetchBooks({ variables: { genre: me.favouriteGenre } })
+        if (meQuery.data) {
+            setMe(meQuery.data.me);
+            fetchBooks({ variables: { genre: meQuery.data.me.favouriteGenre } })
         }
-    }, [me, fetchBooks])
+    }, [meQuery, me, fetchBooks])
 
     useEffect(() => {
         if (result.data) {
