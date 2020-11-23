@@ -6,7 +6,8 @@ import NewBook from './components/NewBook'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('user-token'))
@@ -14,6 +15,16 @@ const App = () => {
   const [message, setMessage] = useState({
     type: null,
     message: null,
+  })
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      flashMessage({
+        type: 'success',
+        message: `${subscriptionData.data.bookAdded.title} was successfully added.`,
+        resetInterval: 5000,
+      })
+    }
   })
 
   const client = useApolloClient()

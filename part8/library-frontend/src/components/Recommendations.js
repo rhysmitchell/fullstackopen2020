@@ -18,7 +18,7 @@ const Recommendations = (props) => {
     useEffect(() => {
         if (meQuery.data) {
             setMe(meQuery.data.me);
-            fetchBooks({ variables: { genre: meQuery.data.me.favouriteGenre } })
+            fetchBooks({ variables: { genre: meQuery.data.me?.favouriteGenre } })
         }
     }, [meQuery, me, fetchBooks])
 

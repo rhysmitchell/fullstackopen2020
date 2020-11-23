@@ -183,8 +183,10 @@ const resolvers = {
         })
       }
 
-      pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
-      return await newBook.populate('author').execPopulate()
+      const returnableNewBook = await newBook.populate('author').execPopulate()
+      pubsub.publish('BOOK_ADDED', { bookAdded: returnableNewBook })
+
+      return returnableNewBook
     },
 
     editAuthor: async (root, args, context) => {
