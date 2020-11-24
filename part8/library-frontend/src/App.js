@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
 import { useApolloClient, useSubscription } from '@apollo/client'
-import { BOOK_ADDED } from './queries'
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('user-token'))
@@ -17,13 +17,30 @@ const App = () => {
     message: null,
   })
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map(p => p.id).includes(object.id)
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+      })
+    }
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+
       flashMessage({
         type: 'success',
-        message: `${subscriptionData.data.bookAdded.title} was successfully added.`,
+        message: `${addedBook.title} was successfully added.`,
         resetInterval: 5000,
       })
+
+      updateCacheWith(addedBook)
     }
   })
 
@@ -81,6 +98,7 @@ const App = () => {
       <NewBook
         flashMessage={flashMessage}
         show={page === 'add'}
+        updateCacheWith={updateCacheWith}
       />
 
       <Recommendations
