@@ -60,9 +60,9 @@ const Books = (props) => {
       <button onClick={() => setBooksFilter('refactoring')}>refactoring</button>
       <button onClick={() => setBooksFilter('agile')}>agile</button>
       <button onClick={() => setBooksFilter('patterns')}>patterns</button>
-      <button onClick={() => setBooksFilter('database')}>database</button>
-      <button onClick={() => setBooksFilter('programming')}>programming</button>
-      <button onClick={() => setBooksFilter('')}>all genres</button>
+      <button onClick={() => setBooksFilter('design')}>design</button>
+      <button onClick={() => setBooksFilter('crime')}>crime</button>
+      <button onClick={() => setBooksFilter('classic')}>classic</button>
     </div>
   )
 }
