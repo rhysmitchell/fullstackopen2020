@@ -121,10 +121,6 @@ const resolvers = {
       return await Book.find(filter).populate('author')
     }
   },
-  Author: {
-    bookCount: async (root) =>
-      await Book.find({ author: root.id }).countDocuments(),
-  },
   Mutation: {
     createUser: async (root, args) => {
       const user = new User({
@@ -177,6 +173,15 @@ const resolvers = {
 
       try {
         await newBook.save()
+
+        const bookCount = await Book.find({
+          author: author.id,
+        }).countDocuments()
+        
+        await Author.findOneAndUpdate(
+          { name: author.name },
+          { bookCount: bookCount }
+        )
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
