@@ -1,6 +1,6 @@
-const calculateBmi = (height: number, weight: number): void => {
-    const bmi: number = weight / (height / 100 * height / 100)
-    let bmiMessage: string = undefined;
+const calculateBmi = (height: number, weight: number): string => {
+    const bmi: number = weight / (height / 100 * height / 100);
+    let bmiMessage: string = '';
 
     switch (true) {
         case bmi < 18.5:
@@ -20,10 +20,10 @@ const calculateBmi = (height: number, weight: number): void => {
             break;
     }
 
-    console.log(bmiMessage);
+    return bmiMessage;
 }
 
-const heightParameter: number = Number(process.argv[2])
-const weightParameter: number = Number(process.argv[3])
+const heightParameter: number = Number(process.argv[2]);
+const weightParameter: number = Number(process.argv[3]);
 
-calculateBmi(heightParameter, weightParameter);
+console.log(calculateBmi(heightParameter, weightParameter));
