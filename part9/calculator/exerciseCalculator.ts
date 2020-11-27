@@ -9,6 +9,10 @@ interface Result {
 }
 
 const exerciseCalculator = (dailyExerciseInHours: number[]): Result => {
+    if (dailyExerciseInHours.length === 0) {
+        throw new Error('No arguments were provided')
+    }
+
     const targetDailyExerciseInHours = 2;
 
     const numberOfDays: number = dailyExerciseInHours.length;
@@ -43,6 +47,10 @@ const exerciseCalculator = (dailyExerciseInHours: number[]): Result => {
         average: averageTime
     } as Result;
 }
-
-const dailyExerciseLog: number[] = [3, 0, 2, 4.5, 0, 3, 1];
-console.log(exerciseCalculator(dailyExerciseLog));
+try {
+    const dailyExerciseLog: number[] = process.argv.slice(2, process.argv.length).map(arg => Number(arg));
+    console.log(exerciseCalculator(dailyExerciseLog));
+}
+catch (error) {
+    console.log(error.message)
+}
