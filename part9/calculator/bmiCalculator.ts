@@ -1,11 +1,11 @@
 const calculateBmi = (height: number, weight: number): string => {
 
     if (!height || !weight) {
-        throw new Error(`Height or Weight arguments weren't provided.`)
+        throw new Error(`Height or Weight arguments weren't provided.`);
     }
 
-    const bmi: number = Number((weight / (height / 100 * height / 100)).toFixed(2));
-    let bmiMessage: string = '';
+    const bmi = Number((weight / (height / 100 * height / 100)).toFixed(2));
+    let bmiMessage = '';
 
     switch (true) {
         case bmi < 18.5:
@@ -26,16 +26,21 @@ const calculateBmi = (height: number, weight: number): string => {
     }
 
     return bmiMessage;
-}
+};
 
 try {
-    const heightParameter: number = Number(process.argv[2]);
-    const weightParameter: number = Number(process.argv[3]);
+    const heightParameter = Number(process.argv[2]);
+    const weightParameter = Number(process.argv[3]);
 
     console.log(calculateBmi(heightParameter, weightParameter));
 }
-catch (error) {
-    console.log(error.message)
+catch (error: unknown) {
+    if (error instanceof Error) {
+        console.log(error.message);
+    }
+    else {
+        console.log(JSON.stringify(error));
+    }
 }
 
 export { calculateBmi };

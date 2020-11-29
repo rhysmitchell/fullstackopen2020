@@ -16,15 +16,14 @@ app.get('/bmi', (req, res) => {
 
     // A near on identical check is done internally inside calculateBmi(...)
     if (!height || !weight) {
-        res.status(400)
-            .send({ error: `Height and weight arguments are required.` })
+        res.status(400).send({ error: `Height and weight arguments are required.` });
     }
 
-    const parsedHeight: number = Number(height)
-    const parsedWeight: number = Number(weight)
+    const parsedHeight = Number(height);
+    const parsedWeight = Number(weight);
 
     if (isNaN(parsedHeight) || isNaN(parsedWeight)) {
-        res.status(400).send({ error: `Malformatted parameters: try passing both arguments as numbers.` })
+        res.status(400).send({ error: `Malformatted parameters: try passing both arguments as numbers.` });
     }
 
     const bmi: BMI = {
