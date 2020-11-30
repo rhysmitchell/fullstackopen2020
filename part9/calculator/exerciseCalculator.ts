@@ -8,18 +8,15 @@ interface Result {
     average: number;
 }
 
-const exerciseCalculator = (dailyExerciseInHours: number[]): Result => {
+const calculateExercises = (dailyTargetInHours: number, dailyExerciseInHours: number[]): Result => {
     if (dailyExerciseInHours.length === 0) {
         throw new Error('No arguments were provided');
     }
 
-    const targetDailyExerciseInHours = 2;
-
     const numberOfDays: number = dailyExerciseInHours.length;
     const numberOfTrainingDays: number = dailyExerciseInHours.filter(hour => hour > 0).length;
-    const targetValue: number = targetDailyExerciseInHours;
     const averageTime: number = dailyExerciseInHours.reduce((a, b) => a + b, 0) / dailyExerciseInHours.length;
-    const targetReached: boolean = (averageTime >= targetValue);
+    const targetReached: boolean = (averageTime >= dailyTargetInHours);
 
     let rating = 0;
     let ratingDescription = '';
@@ -43,13 +40,18 @@ const exerciseCalculator = (dailyExerciseInHours: number[]): Result => {
         success: targetReached,
         rating: rating,
         ratingDescription: ratingDescription,
-        target: targetValue,
+        target: dailyTargetInHours,
         average: averageTime
     } as Result;
 };
+
 try {
-    const dailyExerciseLog: number[] = process.argv.slice(2, process.argv.length).map(arg => Number(arg));
-    console.log(exerciseCalculator(dailyExerciseLog));
+
+    // Target hours has been shifted to be the 'first' parameter
+    // as we don't know the length of the exercise log ahead of time
+    const dailyTargetInHours = Number(process.argv[2]);
+    const dailyExerciseLog: number[] = process.argv.slice(3, process.argv.length).map(arg => Number(arg));
+    console.log(calculateExercises(dailyTargetInHours, dailyExerciseLog));
 }
 catch (error: unknown) {
     if (error instanceof Error) {
@@ -59,3 +61,5 @@ catch (error: unknown) {
         console.log(JSON.stringify(error));
     }
 }
+
+export { calculateExercises };
