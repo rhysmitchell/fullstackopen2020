@@ -14,9 +14,18 @@ router.post('/', (req, res) => {
         const newDiaryEntry = patientService.addEntry(patientToAdd);
         res.json(newDiaryEntry);
     }
-    catch {
-        // How do I get exception details here?...
-        res.status(400).send(`There was an error while adding a new patient entry`);
+    catch (error) {
+        // Credit: https://joefallon.net/2018/09/typescript-try-catch-finally-and-custom-errors/
+        let errorMessage = '';
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        else {
+            errorMessage = `There was an error while adding a new patient entry`;
+        }
+
+        res.status(400).send(errorMessage);
     }
 });
 
