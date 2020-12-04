@@ -19,7 +19,7 @@ const getPatients = (): PatientNonSensitiveData[] => {
 
 const addEntry = (entry: NewPatientEntry): Patient => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const guid: string = uuid() as string;
+    const guid: string = uuid();
 
     const newPatientEntry: Patient = {
         id: guid,
