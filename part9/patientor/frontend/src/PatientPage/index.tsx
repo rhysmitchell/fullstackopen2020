@@ -30,7 +30,7 @@ const PatientPage: React.FC = () => {
     } else {
       setPatient(patients[id]);
     }
-  }, [id]);
+  }, [id, dispatch, patients]);
 
   const getgenderIcon = (gender: Gender): SemanticICONS => {
     switch (gender) {

@@ -1,54 +1,33 @@
-import patientsData from '../../data/patients.json';
+import patientsData from '../../data/patients';
 import { PublicPatient, NewPatientEntry, Patient } from '../types';
 import { v4 as uuid } from 'uuid';
 
+const patients: Patient[] = patientsData;
 
-const getPatients = (): PublicPatient[] => {
-    const nonSensitivePatientData: PublicPatient[] = patientsData.map(data => {
-        return {
-            id: data.id,
-            name: data.name,
-            dateOfBirth: data.dateOfBirth,
-            gender: data.gender,
-            occupation: data.occupation
-        } as PublicPatient;
-    });
+const getPatients = (): PublicPatient[] => patients.map(patient => {
+  const { id, name, dateOfBirth, gender, occupation } = patient;
+  const publicPatient: PublicPatient = { id, name, dateOfBirth, gender, occupation };
+  return publicPatient;
+});
 
-    return nonSensitivePatientData;
-};
-
-const getPatient = (id: string): Patient => {
-    const patientData: Patient = patientsData.filter(data => data.id === id).map(data => {
-        return {
-            id: data.id,
-            name: data.name,
-            ssn: data.ssn,
-            dateOfBirth: data.dateOfBirth,
-            gender: data.gender,
-            occupation: data.occupation,
-            entries: []
-        } as Patient;
-    })[0];
-
-    return patientData;
-};
+const getPatient = (id: string): Patient | undefined => patients.find(patient => patient.id === id);
 
 const addEntry = (entry: NewPatientEntry): Patient => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const guid: string = uuid();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const guid: string = uuid();
 
-    const newPatientEntry: Patient = {
-        id: guid,
-        ...entry,
-        entries: []
-    };
+  const newPatientEntry: Patient = {
+    id: guid,
+    ...entry,
+    entries: []
+  };
 
-    patientsData.push(newPatientEntry);
-    return newPatientEntry;
+  patientsData.push(newPatientEntry);
+  return newPatientEntry;
 };
 
 export default {
-    getPatients,
-    getPatient,
-    addEntry
+  getPatients,
+  getPatient,
+  addEntry
 };
