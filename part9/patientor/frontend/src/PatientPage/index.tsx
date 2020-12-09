@@ -4,7 +4,7 @@ import { Card, Icon, Button, SemanticICONS, Form } from "semantic-ui-react";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
 import { Patient, Gender } from "../types";
-import { useStateValue } from '../state';
+import { useStateValue, updatePatient } from '../state';
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +18,7 @@ const PatientPage: React.FC = () => {
           `${apiBaseUrl}/patients/${id}`
         );
         setPatient(patientData);
-        dispatch({ type: 'UPDATE_PATIENT', payload: patientData });
+        dispatch(updatePatient(patientData));
       } catch (error) {
         console.log(error);
       }
