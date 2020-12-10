@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Card, Icon, Button, SemanticICONS, Form } from "semantic-ui-react";
+import { Card, Icon, Button, SemanticICONS, Form, List } from "semantic-ui-react";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
 import { Patient, Gender } from "../types";
@@ -17,6 +17,7 @@ const PatientPage: React.FC = () => {
         const { data: patientData } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
+
         setPatient(patientData);
         dispatch(updatePatient(patientData));
       } catch (error) {
@@ -24,11 +25,13 @@ const PatientPage: React.FC = () => {
       }
     };
 
-
-    if (!patients[id]) {
-      fetchPatient();
-    } else {
+    // Only non-sensitive data lives
+    // in the cache, conditionally fetch
+    // patient if it doesn't have ssn
+    if (patients[id]?.ssn) {
       setPatient(patients[id]);
+    } else {
+      fetchPatient();
     }
   }, [id, dispatch, patients]);
 
@@ -83,8 +86,31 @@ const PatientPage: React.FC = () => {
                 </Form.Field>
 
                 <Form.Field>
-                  <label>Number of Entries</label>
-                  {patient?.entries?.length || 0}
+                  <label>Entries</label>
+                  <List>
+                    {patient.entries.map(patient =>
+                      <List.Item key={patient.id}>
+                        <Form.Field>
+                          <label>Date</label>
+                          {patient.date}
+                        </Form.Field>
+
+                        <Form.Field>
+                          <label>Description</label>
+                          {patient.description}
+                        </Form.Field>
+
+                        <Form.Field>
+                          <label>Diagnosis Codes</label>
+                          <List>
+                            {patient?.diagnosisCodes?.map(code =>
+                              <List.Item key={code}>
+                                {code}
+                              </List.Item>)}
+                          </List>
+                        </Form.Field>
+                      </List.Item>)}
+                  </List>
                 </Form.Field>
               </Form>
             </Card.Content>

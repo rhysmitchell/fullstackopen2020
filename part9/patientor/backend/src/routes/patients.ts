@@ -8,7 +8,12 @@ const router = express.Router();
 router.get('/', (_req, res) => res.send(patientService.getPatients()));
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    const patient: Patient = patientService.getPatient(id);
+    const patient: Patient | undefined = patientService.getPatient(id);
+
+    if (!patient) {
+        res.status(400).send(`Patient with the id of ${id} does not exist.`);
+    }
+
     res.send(patient);
 });
 
