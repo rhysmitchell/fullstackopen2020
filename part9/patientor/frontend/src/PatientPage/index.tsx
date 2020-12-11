@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Card, Icon, Button, SemanticICONS, Form, List } from "semantic-ui-react";
+import {
+  Card,
+  Icon,
+  Button,
+  SemanticICONS,
+  Form,
+  List,
+} from "semantic-ui-react";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { Patient, Gender } from "../types";
-import { useStateValue, updatePatient } from '../state';
+import { Patient, Gender, Diagnosis } from "../types";
+import { useStateValue, updatePatient, setDiagnosisList } from "../state";
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient | undefined>();
 
   useEffect(() => {
@@ -25,13 +32,22 @@ const PatientPage: React.FC = () => {
       }
     };
 
-    // Only non-sensitive data lives
-    // in the cache, conditionally fetch
-    // patient if it doesn't have ssn
+    const fetchDiagnosisList = async () => {
+      try {
+        const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatch(setDiagnosisList(diagnosisListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     if (patients[id]?.ssn) {
       setPatient(patients[id]);
     } else {
       fetchPatient();
+      fetchDiagnosisList();
     }
   }, [id, dispatch, patients]);
 
@@ -58,9 +74,7 @@ const PatientPage: React.FC = () => {
         <Card>
           <Card.Content>
             <Card.Header>{patient.name}</Card.Header>
-            <Card.Meta>
-              {patient.occupation}
-            </Card.Meta>
+            <Card.Meta>{patient.occupation}</Card.Meta>
             <Card.Content>
               <br />
 
@@ -88,7 +102,7 @@ const PatientPage: React.FC = () => {
                 <Form.Field>
                   <label>Entries</label>
                   <List>
-                    {patient.entries.map(patient =>
+                    {patient.entries.map((patient) => (
                       <List.Item key={patient.id}>
                         <Form.Field>
                           <label>Date</label>
@@ -101,15 +115,17 @@ const PatientPage: React.FC = () => {
                         </Form.Field>
 
                         <Form.Field>
-                          <label>Diagnosis Codes</label>
+                          <label>Diagnoses</label>
                           <List>
-                            {patient?.diagnosisCodes?.map(code =>
+                            {patient?.diagnosisCodes?.map((code) => (
                               <List.Item key={code}>
-                                {code}
-                              </List.Item>)}
+                                {code} {diagnoses[code]?.name}
+                              </List.Item>
+                            ))}
                           </List>
                         </Form.Field>
-                      </List.Item>)}
+                      </List.Item>
+                    ))}
                   </List>
                 </Form.Field>
               </Form>

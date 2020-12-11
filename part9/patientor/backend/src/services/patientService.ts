@@ -2,7 +2,7 @@ import patientsData from '../../data/patients';
 import { PublicPatient, NewPatientEntry, Patient } from '../types';
 import { v4 as uuid } from 'uuid';
 
-const patients: Patient[] = patientsData;
+const patients: Patient[] | null = patientsData;
 
 const getPatients = (): PublicPatient[] => patients.map(patient => {
   const { id, name, dateOfBirth, gender, occupation } = patient;
