@@ -5,7 +5,7 @@ import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
 import { useStateValue, setPatientList } from "./state";
-import { Patient } from "./types";
+import { Patient } from "./interfaces";
 
 import PatientListPage from "./PatientListPage";
 import PatientPage from "./PatientPage";

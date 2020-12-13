@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  Card,
-  Icon,
-  Button,
-  SemanticICONS,
-  Form,
-  List,
-} from "semantic-ui-react";
+import { Card, Icon, Button, SemanticICONS, Item } from "semantic-ui-react";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { Patient, Gender, Diagnosis } from "../types";
+import { Gender } from "../types";
+import { Patient, Diagnosis } from "../interfaces";
 import { useStateValue, updatePatient, setDiagnosisList } from "../state";
+import EntryDetails from "../components/EntryDetails";
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients, diagnoses }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient | undefined>();
 
   useEffect(() => {
@@ -73,62 +68,20 @@ const PatientPage: React.FC = () => {
       {patient && (
         <Card>
           <Card.Content>
-            <Card.Header>{patient.name}</Card.Header>
-            <Card.Meta>{patient.occupation}</Card.Meta>
+            <Card.Header>
+              {patient.name} <Icon name={getgenderIcon(patient.gender)} />
+            </Card.Header>
+            <Card.Meta>Occupation: {patient.occupation}</Card.Meta>
+            <Card.Meta>SSN: {patient.ssn}</Card.Meta>
             <Card.Content>
-              <br />
-
-              <Form>
-                <Form.Field>
-                  <label>Id</label>
-                  {patient.id}
-                </Form.Field>
-
-                <Form.Field>
-                  <label>Date of birth</label>
-                  {patient.dateOfBirth}
-                </Form.Field>
-
-                <Form.Field>
-                  <label>Gender</label>
-                  <Icon name={getgenderIcon(patient.gender)} />
-                </Form.Field>
-
-                <Form.Field>
-                  <label>SSN</label>
-                  {patient.ssn}
-                </Form.Field>
-
-                <Form.Field>
-                  <label>Entries</label>
-                  <List>
-                    {patient.entries.map((patient) => (
-                      <List.Item key={patient.id}>
-                        <Form.Field>
-                          <label>Date</label>
-                          {patient.date}
-                        </Form.Field>
-
-                        <Form.Field>
-                          <label>Description</label>
-                          {patient.description}
-                        </Form.Field>
-
-                        <Form.Field>
-                          <label>Diagnoses</label>
-                          <List>
-                            {patient?.diagnosisCodes?.map((code) => (
-                              <List.Item key={code}>
-                                {code} {diagnoses[code]?.name}
-                              </List.Item>
-                            ))}
-                          </List>
-                        </Form.Field>
-                      </List.Item>
-                    ))}
-                  </List>
-                </Form.Field>
-              </Form>
+              <Card.Header>
+                <h4 style={{ paddingTop: "15px" }}>Entries</h4>
+              </Card.Header>
+              <Item.Group style={{ margin: 0 }}>
+                {patient.entries.map((entry) => (
+                  <EntryDetails key={entry.id} entry={entry} />
+                ))}
+              </Item.Group>
             </Card.Content>
           </Card.Content>
         </Card>

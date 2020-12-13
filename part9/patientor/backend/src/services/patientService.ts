@@ -1,5 +1,6 @@
 import patientsData from '../../data/patients';
-import { PublicPatient, NewPatientEntry, Patient } from '../types';
+import { PublicPatient, NewPatientEntry } from '../types';
+import { Patient } from '../interfaces';
 import { v4 as uuid } from 'uuid';
 
 const patients: Patient[] | null = patientsData;

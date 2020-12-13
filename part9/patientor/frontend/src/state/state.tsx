@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { Patient, Diagnosis } from "../types";
+import { Patient, Diagnosis } from "../interfaces";
 
 import { Action } from "./reducer";
 

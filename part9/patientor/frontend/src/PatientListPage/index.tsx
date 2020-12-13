@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
-import { Patient } from "../types";
+import { Patient } from "../interfaces";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue, addPatient } from "../state";
