@@ -1,5 +1,5 @@
 import patientsData from '../../data/patients';
-import { PublicPatient, NewPatientEntry } from '../types';
+import { PublicPatient, NewPatient, Entry } from '../types';
 import { Patient } from '../interfaces';
 import { v4 as uuid } from 'uuid';
 
@@ -13,22 +13,32 @@ const getPatients = (): PublicPatient[] => patients.map(patient => {
 
 const getPatient = (id: string): Patient | undefined => patients.find(patient => patient.id === id);
 
-const addEntry = (entry: NewPatientEntry): Patient => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const guid: string = uuid();
-
-  const newPatientEntry: Patient = {
-    id: guid,
-    ...entry,
+const addPatient = (patient: NewPatient): Patient => {
+  const newPatient: Patient = {
+    id: uuid(),
+    ...patient,
     entries: []
-  };
+  } as Patient;
 
-  patientsData.push(newPatientEntry);
-  return newPatientEntry;
+  patients.push(newPatient);
+  return newPatient;
+};
+
+const addEntry = (patientId: string, entry: Entry): Entry => {
+
+  const patient: Patient | undefined = getPatient(patientId);
+  if (!patient) {
+    throw new Error(`Patient with the id ${patientId} does not exist.`);
+  }
+
+  patient.entries.concat(entry);
+
+  return entry;
 };
 
 export default {
   getPatients,
   getPatient,
-  addEntry
+  addEntry,
+  addPatient,
 };

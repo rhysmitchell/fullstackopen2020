@@ -25,4 +25,5 @@ export type Entry =
 
 
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;
-export type NewPatientEntry = Omit<Patient, 'id' | 'entries'>;
+export type NewPatient = Omit<Patient, 'id' | 'entries'>;
+export type NewEntry = Omit<Entry, 'id'>;

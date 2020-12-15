@@ -1,0 +1,15 @@
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+    "id": "3e1422e9-d8bd-4112-8f9b-9c6f422a9bd6",
+    "date": "2020-01-01",
+    "type": "Hospital",
+    "specialist": "Mickey Mouse House",
+    "diagnosisCodes": ["0000"],
+    "description": "Healing time appr. 2 weeks. patient doesn\"t remember how he got the injury.",
+    "discharge": {
+        "date": "2020-01-01",
+        "criteria": "Thumb has healed."
+        }
+}
