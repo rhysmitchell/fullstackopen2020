@@ -30,7 +30,7 @@ const OccupationalHealthcare: React.FC<OccupationalHealthcareEntryProps> = (
           <Item.Description>
             <strong>Sick Leave: </strong>
             <span>
-              {entry.sickLeave?.startDate} - {entry.sickLeave?.endDate}
+              {entry.sickLeave?.startDate} / {entry.sickLeave?.endDate}
             </span>
           </Item.Description>
         )}

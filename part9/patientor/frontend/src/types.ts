@@ -1,4 +1,4 @@
-import { HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry } from "./interfaces";
+import { HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry, Patient } from "./interfaces";
 
 export enum Gender {
   Male = "male",
@@ -17,3 +17,6 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
+export type EntryFormValues = OccupationalHealthcareEntry;
