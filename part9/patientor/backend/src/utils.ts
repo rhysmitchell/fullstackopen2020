@@ -105,24 +105,15 @@ export const toEntry = (object: any): Entry => {
             };
 
         case "OccupationalHealthcare":
-            if (object.sickLeave && object.sickLeave) {
-                return {
-                    ...baseEntry,
-                    type: 'OccupationalHealthcare',
-                    employerName: parseString('employerName', object.employerName),
-                    sickLeave: {
-                        startDate: parseDate(object.sickLeave.startDate),
-                        endDate: parseDate(object.sickLeave.endDate)
-                    }
-                };
-            }
-
             return {
                 ...baseEntry,
                 type: 'OccupationalHealthcare',
-                employerName: parseString('employerName', object.employerName)
+                employerName: parseString('employerName', object.employerName),
+                sickLeave: {
+                    startDate: (object.sickLeave.startDate ? parseDate(object.sickLeave.startDate) : undefined),
+                    endDate: (object.sickLeave.endDate ? parseDate(object.sickLeave.endDate) : undefined),
+                }
             };
-
         case "HealthCheck":
             return {
                 ...baseEntry,

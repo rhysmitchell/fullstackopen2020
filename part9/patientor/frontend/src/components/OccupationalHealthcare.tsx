@@ -26,7 +26,7 @@ const OccupationalHealthcare: React.FC<OccupationalHealthcareEntryProps> = (
           <strong>Description: </strong>
           {entry.description}
         </Item.Description>
-        {entry.sickLeave && (
+        {entry.sickLeave && Object.keys(entry.sickLeave).length > 0 && (
           <Item.Description>
             <strong>Sick Leave: </strong>
             <span>

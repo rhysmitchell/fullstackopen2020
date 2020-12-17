@@ -5,6 +5,7 @@ import { Field, Formik, Form } from "formik";
 import { useStateValue } from "../state";
 import { EntryFormValues } from "../types";
 import { DiagnosisSelection, TextField } from "../AddPatientModal/FormField";
+import { isDate } from "../utils";
 
 export interface EntryProps {
   onSubmit: (values: EntryFormValues) => void;
@@ -32,8 +33,32 @@ export const AddEntryForm: React.FC<EntryProps> = (props) => {
         },
       }}
       onSubmit={onSubmit}
+      validate={(values) => {
+        const requiredError = "Field is required";
+        const errors: { [field: string]: string } = {};
+        if (!values.description) {
+          errors.description = requiredError;
+        }
+        if (!values.specialist) {
+          errors.specialist = requiredError;
+        }
+
+        if (!isDate(values.date)) {
+          errors.date = "Date is invalid";
+        }
+
+        if (!values.date) {
+          errors.date = requiredError;
+        }
+
+        if (!values.employerName) {
+          errors.employerName = requiredError;
+        }
+
+        return errors;
+      }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -88,7 +113,7 @@ export const AddEntryForm: React.FC<EntryProps> = (props) => {
                   type="submit"
                   floated="right"
                   color="green"
-                  disabled={!dirty || !isValid}
+                  disabled={!dirty}
                 >
                   Add
                 </Button>
