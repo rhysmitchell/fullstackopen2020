@@ -1,5 +1,12 @@
 import { Entry, Gender, HealthCheckRating } from "./types";
 
+export interface EntryProps {
+  onSubmit: (values: EntryFormValues) => void;
+  modalOpen: boolean;
+  onClose: () => void;
+  patientId: string;
+  error?: string;
+}
 export interface Diagnosis {
   code: string;
   name: string;
@@ -27,19 +34,15 @@ export interface HealthCheckEntry extends BaseEntry {
 
 export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
-  discharge: {
-    date: string;
-    criteria: string;
-  };
+  dischargeDate: string;
+  dischargeCriteria: string;
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
-  sickLeave?: {
-    startDate: string;
-    endDate: string;
-  };
+  sickLeaveStartDate?: string;
+  sickLeaveEndDate?: string;
 }
 
 export interface Patient {
@@ -50,4 +53,14 @@ export interface Patient {
   ssn?: string;
   dateOfBirth?: string;
   entries: Entry[];
+}
+
+export interface EntryFormValues extends BaseEntry {
+  type: string;
+  healthCheckRating?: HealthCheckRating;
+  dischargeDate?: string;
+  dischargeCriteria?: string;
+  employerName?: string;
+  sickLeaveStartDate?: string;
+  sickLeaveEndDate?: string;
 }

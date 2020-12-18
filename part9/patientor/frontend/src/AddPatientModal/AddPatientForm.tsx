@@ -5,14 +5,14 @@ import { Field, Formik, Form } from "formik";
 import { TextField, SelectField, GenderOption } from "./FormField";
 import { Gender } from "../types";
 import { Patient } from "../interfaces";
-
+import { isDate } from "../utils";
 /*
  * use type Patient, but omit id and entries,
  * because those are irrelevant for new patient object.
  */
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
-interface Props {
+interface PatientForm {
   onSubmit: (values: PatientFormValues) => void;
   onCancel: () => void;
 }
@@ -23,7 +23,7 @@ const genderOptions: GenderOption[] = [
   { value: Gender.Other, label: "Other" },
 ];
 
-export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddPatientForm: React.FC<PatientForm> = ({ onSubmit, onCancel }) => {
   return (
     <Formik
       initialValues={{
@@ -46,6 +46,11 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.dateOfBirth) {
           errors.dateOfBirth = requiredError;
         }
+
+        if (values.dateOfBirth && !isDate(values.dateOfBirth)) {
+          errors.dateOfBirth = 'Date of birth is invalid';
+        }
+
         if (!values.occupation) {
           errors.occupation = requiredError;
         }
@@ -61,25 +66,30 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               name="name"
               component={TextField}
             />
+
             <Field
               label="Social Security Number"
               placeholder="SSN"
               name="ssn"
               component={TextField}
             />
+            
             <Field
               label="Date Of Birth"
               placeholder="YYYY-MM-DD"
               name="dateOfBirth"
               component={TextField}
             />
+
             <Field
               label="Occupation"
               placeholder="Occupation"
               name="occupation"
               component={TextField}
             />
+
             <SelectField label="Gender" name="gender" options={genderOptions} />
+
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">

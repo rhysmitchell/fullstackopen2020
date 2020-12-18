@@ -14,22 +14,18 @@ const isString = (text: any): text is string => {
 
 const parseString = (name: string, string: any): string => {
     if (!string || !isString(string)) {
-        throw new Error(`Incorrect or missing string 'name': ${name}`);
+        throw new Error(`Incorrect or missing string: ${name}`);
     }
 
     return string;
 };
 
-const isNumber = (number: any): number is number => {
-    return typeof number === 'number' || number instanceof Number;
-};
-
-const parseNumber = (name: string, number: any): number => {
-    if (!number || !isNumber(number)) {
-        throw new Error(`Incorrect or missing string 'name': ${name}`);
+const parseRating = (rating: any): number => {
+    if (!(rating)) {
+        throw new Error(`Missing rating: ${rating}`);
     }
 
-    return number;
+    return parseInt(rating);
 };
 
 const parseStringArray = (name: string, strings: any[]): string[] => {
@@ -98,10 +94,8 @@ export const toEntry = (object: any): Entry => {
             return {
                 ...baseEntry,
                 type: "Hospital",
-                discharge: {
-                    date: parseDate(object.discharge.date),
-                    criteria: parseString('discharge', object.discharge.criteria)
-                }
+                dischargeDate: parseDate(object.dischargeDate),
+                dischargeCriteria: parseString('discharge', object.dischargeCriteria)
             };
 
         case "OccupationalHealthcare":
@@ -109,16 +103,14 @@ export const toEntry = (object: any): Entry => {
                 ...baseEntry,
                 type: 'OccupationalHealthcare',
                 employerName: parseString('employerName', object.employerName),
-                sickLeave: {
-                    startDate: (object.sickLeave.startDate ? parseDate(object.sickLeave.startDate) : undefined),
-                    endDate: (object.sickLeave.endDate ? parseDate(object.sickLeave.endDate) : undefined),
-                }
+                sickLeaveStartDate: (object.sickLeaveStartDate ? parseDate(object.sickLeaveStartDate) : ''),
+                sickLeaveEndDate: (object.sickLeaveEndDate ? parseDate(object.sickLeaveEndDate) : '')
             };
         case "HealthCheck":
             return {
                 ...baseEntry,
                 type: 'HealthCheck',
-                healthCheckRating: parseNumber('healthCheckRating', object.healthCheckRating)
+                healthCheckRating: parseRating(object.healthCheckRating)
             };
 
         default:

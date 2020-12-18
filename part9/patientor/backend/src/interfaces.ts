@@ -22,20 +22,16 @@ export interface BaseEntry {
 
 export interface HospitalEntry extends BaseEntry {
     type: "Hospital";
-    discharge: {
-        date: string;
-        criteria: string;
-    };
+    dischargeDate: string;
+    dischargeCriteria: string;
 }
 
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
     type: "OccupationalHealthcare";
     employerName: string;
-    sickLeave?: {
-        startDate: string | undefined;
-        endDate: string | undefined;
-    };
+    sickLeaveStartDate: string;
+    sickLeaveEndDate: string;
 }
 
 export enum HealthCheckRating {

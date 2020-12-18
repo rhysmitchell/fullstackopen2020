@@ -1,17 +1,9 @@
 import React from "react";
 import { Modal, Segment } from "semantic-ui-react";
-import { EntryFormValues } from "../types";
+import { EntryProps } from "../interfaces";
 import AddEntryForm from "./AddEntryForm";
 
-interface EntryProps {
-  modalOpen: boolean;
-  onClose: () => void;
-  onSubmit: (values: EntryFormValues) => void;
-  error?: string;
-  patientId: string;
-}
-
-export const AddEntryModal: React.FC<EntryProps> = props => {
+export const AddEntryModal: React.FC<EntryProps> = (props) => {
   const { modalOpen, onSubmit, onClose, patientId, error } = props;
 
   return (

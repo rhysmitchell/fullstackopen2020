@@ -26,14 +26,13 @@ const OccupationalHealthcare: React.FC<OccupationalHealthcareEntryProps> = (
           <strong>Description: </strong>
           {entry.description}
         </Item.Description>
-        {entry.sickLeave && Object.keys(entry.sickLeave).length > 0 && (
-          <Item.Description>
-            <strong>Sick Leave: </strong>
-            <span>
-              {entry.sickLeave?.startDate} / {entry.sickLeave?.endDate}
-            </span>
-          </Item.Description>
-        )}
+        <Item.Description>
+          <strong>Sick Leave: </strong>
+          <span>
+            {entry?.sickLeaveStartDate || "?"} /{" "}
+            {entry?.sickLeaveEndDate || "?"}
+          </span>
+        </Item.Description>
       </Item.Content>
     </Item>
   );

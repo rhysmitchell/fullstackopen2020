@@ -16,8 +16,13 @@ const Hospital: React.FC<HospitalEntryProps> = (
       <Item.Content>
         <Item.Description>
           <strong>Discharge Date: </strong>
+          {entry.dischargeDate}
+
+          <br/>
+          
+          <strong>Discharge Criteria: </strong>
+          {entry.dischargeCriteria}
           <Icon name="hospital" />
-          {entry.discharge.date}: {entry.discharge.criteria}
         </Item.Description>
       </Item.Content>
     </Item>

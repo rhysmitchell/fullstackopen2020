@@ -18,10 +18,8 @@ const patients: Patient[] = [
         diagnosisCodes: ['S62.5'],
         description:
           "Healing time appr. 2 weeks. patient doesn't remember how he got the injury.",
-        discharge: {
-          date: '2015-01-16',
-          criteria: 'Thumb has healed.',
-        },
+        dischargeDate: '2015-01-16',
+        dischargeCriteria: 'Thumb has healed.'
       },
     ],
   },
@@ -42,10 +40,8 @@ const patients: Patient[] = [
         diagnosisCodes: ['Z57.1', 'Z74.3', 'M51.2'],
         description:
           'Patient mistakenly found himself in a nuclear plant waste site without protection gear. Very minor radiation poisoning. ',
-        sickLeave: {
-          startDate: '2019-08-05',
-          endDate: '2019-08-28',
-        },
+        sickLeaveStartDate: '2019-08-05',
+        sickLeaveEndDate: '2019-08-28'
       },
     ],
   },
@@ -81,6 +77,8 @@ const patients: Patient[] = [
         type: 'OccupationalHealthcare',
         employerName: 'FBI',
         description: 'Prescriptions renewed.',
+        sickLeaveStartDate: '',
+        sickLeaveEndDate: ''
       },
       {
         id: '37be178f-a432-4ba4-aac2-f86810e36a15',

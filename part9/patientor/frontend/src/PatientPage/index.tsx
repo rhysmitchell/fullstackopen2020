@@ -3,8 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { Card, Icon, Button, SemanticICONS, Item } from "semantic-ui-react";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { Entry, EntryFormValues, Gender } from "../types";
-import { Patient, Diagnosis } from "../interfaces";
+import { Entry, Gender } from "../types";
+import { Patient, Diagnosis, EntryFormValues } from "../interfaces";
 import {
   useStateValue,
   updatePatient,
@@ -19,6 +19,7 @@ const PatientPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient | undefined>();
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -76,7 +77,7 @@ const PatientPage: React.FC = () => {
       setModalOpen(false);
     } catch (e) {
       console.error(e.response.data);
-      console.log(e.response.data.error);
+      setError(e.response.data.error);
     }
   };
 
@@ -84,7 +85,7 @@ const PatientPage: React.FC = () => {
     <div>
       <Button color="green" onClick={() => setModalOpen(true)}>
         <Icon name="add" />
-        Add New Entry (Sick Leave)
+        Add New Entry
       </Button>
       <br />
       <br />
@@ -101,6 +102,7 @@ const PatientPage: React.FC = () => {
             onSubmit={submitNewEntry}
             onClose={() => setModalOpen(false)}
             patientId={patient.id}
+            error={error}
           />
 
           <Card>
@@ -111,13 +113,41 @@ const PatientPage: React.FC = () => {
               <Card.Meta>Occupation: {patient.occupation}</Card.Meta>
               <Card.Meta>SSN: {patient.ssn}</Card.Meta>
               <Card.Content>
+                <Item.Group style={{ margin: 0 }}>
+                  <Item>
+                    <Item.Content>
+                      <Item.Description>
+                        <strong>Id: </strong>
+                        {patient.id}
+                      </Item.Description>
+                    </Item.Content>
+                  </Item>
+                </Item.Group>
+
+                <Item.Group style={{ margin: 0 }}>
+                  <Item>
+                    <Item.Content>
+                      <Item.Description>
+                        <strong>DOB: </strong>
+                        {patient.dateOfBirth}
+                      </Item.Description>
+                    </Item.Content>
+                  </Item>
+                </Item.Group>
+
                 <Card.Header>
                   <h4 style={{ paddingTop: "15px" }}>Entries</h4>
                 </Card.Header>
+
                 <Item.Group style={{ margin: 0 }}>
-                  {patient.entries.map((entry) => (
-                    <EntryDetails key={entry.id} entry={entry} />
-                  ))}
+                  <ul>
+                    {patient.entries.map((entry) => (
+                      <li key={entry.id}>
+                        <EntryDetails key={entry.id} entry={entry} />
+                        <br/>
+                      </li>
+                    ))}
+                  </ul>
                 </Item.Group>
               </Card.Content>
             </Card.Content>
